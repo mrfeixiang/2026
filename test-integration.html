@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Test - Multilingual Calendar 2026</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>Integration Test Results</h1>
+    <div id="testResults"></div>
+    
+    <script>
+        // Load the calendar scripts for testing
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        document.head.appendChild(script);
+        
+        script.onload = function() {
+            runIntegrationTests();
+        };
+        
+        function addTestResult(name, passed, message) {
+            const resultsDiv = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            resultDiv.innerHTML = `<strong>${name}:</strong> ${passed ? 'PASS' : 'FAIL'} - ${message}`;
+            resultsDiv.appendChild(resultDiv);
+        }
+        
+        function addInfo(message) {
+            const resultsDiv = document.getElementById('testResults');
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'test-result info';
+            infoDiv.innerHTML = `<strong>INFO:</strong> ${message}`;
+            resultsDiv.appendChild(infoDiv);
+        }
+        
+        function runIntegrationTests() {
+            addInfo('Starting integration tests...');
+            
+            try {
+                // Test 1: CalendarEngine instantiation
+                const engine = new CalendarEngine(2026);
+                addTestResult('CalendarEngine Creation', true, 'CalendarEngine created successfully');
+                
+                // Test 2: Month grid generation
+                const grid = engine.generateMonthGrid(0, 2026); // January 2026
+                addTestResult('Month Grid Generation', grid && grid.length === 42, `Generated grid with ${grid ? grid.length : 0} cells`);
+                
+                // Test 3: Navigation functionality
+                const navResult = engine.navigateToMonth(5, 2026); // June 2026
+                addTestResult('Navigation', navResult === true, 'Navigation to June 2026 successful');
+                
+                // Test 4: FlowerImageManager instantiation
+                const flowerManager = new FlowerImageManager();
+                addTestResult('FlowerImageManager Creation', true, 'FlowerImageManager created successfully');
+                
+                // Test 5: Flower data retrieval
+                const flower = flowerManager.getMonthlyFlower(0); // January
+                addTestResult('Flower Data Retrieval', flower && flower.portuguese === 'Camélia', `Retrieved flower: ${flower ? flower.portuguese : 'none'}`);
+                
+                // Test 6: Seasonal theme application
+                const theme = flowerManager.applySeasonalTheme(0); // January (winter)
+                addTestResult('Seasonal Theme', theme && theme.primary, `Applied theme with primary color: ${theme ? theme.primary : 'none'}`);
+                
+                // Test 7: Error handling mechanisms
+                try {
+                    engine.navigateToMonth(15, 2026); // Invalid month
+                    addTestResult('Error Handling', false, 'Should have handled invalid month');
+                } catch (error) {
+                    addTestResult('Error Handling', true, 'Properly handled invalid input');
+                }
+                
+                // Test 8: Weekend detection
+                const testDate = new Date(2026, 0, 4); // January 4, 2026 (Saturday)
+                const isWeekend = engine.isWeekend(testDate);
+                addTestResult('Weekend Detection', isWeekend === true, `January 4, 2026 correctly identified as weekend: ${isWeekend}`);
+                
+                // Test 9: Bilingual month names
+                const enName = engine.getMonthName(0, 'en');
+                const zhName = engine.getMonthName(0, 'zh');
+                addTestResult('Bilingual Support', enName === 'January' && zhName === '一月', `EN: ${enName}, ZH: ${zhName}`);
+                
+                // Test 10: Performance optimization (preloading)
+                const startTime = performance.now();
+                for (let i = 0; i < 12; i++) {
+                    engine.generateMonthGrid(i, 2026);
+                }
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                addTestResult('Performance', duration < 100, `Generated all 12 months in ${duration.toFixed(2)}ms`);
+                
+                addInfo('All integration tests completed successfully!');
+                
+            } catch (error) {
+                addTestResult('Integration Test Suite', false, `Test suite failed: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>

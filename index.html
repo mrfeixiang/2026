@@ -3,74 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 Science & Literature Calendar</title>
+    <meta name="description" content="Multilingual Calendar 2026 - Learn English & Chinese with Portuguese Flowers">
+    <meta name="keywords" content="calendar, 2026, multilingual, English, Chinese, Portuguese, flowers, learning">
+    <meta name="author" content="Multilingual Calendar App">
+    
+    <!-- Performance optimizations -->
+    <meta name="theme-color" content="#667eea">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <title>Multilingual Calendar 2026</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Accessibility improvements -->
+    <style>
+        /* Loading state */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(102, 126, 234, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Skip to content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: #000;
+            color: #fff;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 10000;
+        }
+        
+        .skip-link:focus {
+            top: 6px;
+        }
+    </style>
 </head>
 <body>
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
     <div class="container">
         <header class="header">
-            <div class="language-toggle">
-                <button id="langToggle" class="lang-btn">中文</button>
-            </div>
-            <h1 id="mainTitle">2026 Calendar</h1>
-            <h1 id="mainTitleCh" class="chinese-text hidden">2026年日历</h1>
-            <p id="subtitle" class="subtitle">A Journey Through Science & Literature</p>
-            <p id="subtitleCh" class="subtitle chinese-text hidden">科学与文学之旅</p>
+            <h1>Multilingual Calendar 2026</h1>
+            <p class="subtitle">Learn English & Chinese with Portuguese Flowers</p>
         </header>
 
-        <div class="calendar-navigation">
-            <button id="prevMonth" class="nav-btn">&lt;</button>
-            <h2 id="currentMonth" class="month-title"></h2>
-            <button id="nextMonth" class="nav-btn">&gt;</button>
-        </div>
-
-        <div class="calendar-container">
-            <div class="month-flower" id="monthFlower">
-                <div class="flower-art" id="flowerArt"></div>
-                <div class="flower-name" id="flowerName"></div>
-                <div class="flower-name-chinese" id="flowerNameChinese"></div>
+        <nav class="calendar-navigation" role="navigation" aria-label="Calendar navigation">
+            <button id="prevMonth" class="nav-btn" aria-label="Previous month">&lt;</button>
+            <div class="month-display">
+                <h2 id="currentMonth" class="month-title-en" aria-live="polite"></h2>
+                <h2 id="currentMonthCh" class="month-title-ch" aria-live="polite"></h2>
             </div>
-            <div class="calendar-grid" id="calendarGrid">
-                <!-- Calendar will be generated here -->
-            </div>
-        </div>
+            <button id="nextMonth" class="nav-btn" aria-label="Next month">&gt;</button>
+        </nav>
 
-        <div class="sidebar">
-            <div class="daily-quote" id="dailyQuote">
-                <h3 id="quoteTitle">Quote of the Day</h3>
-                <h3 id="quoteTitleCh" class="chinese-text hidden">每日名言</h3>
-                <blockquote id="quoteText"></blockquote>
-                <blockquote id="quoteTextCh" class="chinese-text hidden"></blockquote>
-                <cite id="quoteAuthor"></cite>
-                <cite id="quoteAuthorCh" class="chinese-text hidden"></cite>
-                <div class="study-tools" id="studyTools">
-                    <button class="study-btn" id="pronounceBtn">🔊 Pronounce</button>
-                    <button class="study-btn" id="translateBtn">📖 Show Translation</button>
+        <main id="main-content" class="calendar-container">
+            <section class="month-flower" aria-labelledby="flower-heading">
+                <h3 id="flower-heading" class="sr-only">Monthly Flower</h3>
+                <div class="flower-image" id="flowerImage" role="img" aria-label="Monthly flower"></div>
+                <div class="flower-info">
+                    <div class="flower-name-pt" id="flowerNamePt" aria-label="Portuguese name"></div>
+                    <div class="flower-name-en" id="flowerNameEn" aria-label="English name"></div>
+                    <div class="flower-name-ch" id="flowerNameCh" aria-label="Chinese name"></div>
                 </div>
-            </div>
+            </section>
+            
+            <section class="calendar-grid" id="calendarGrid" role="grid" aria-label="Calendar grid">
+                <!-- Calendar will be generated here -->
+            </section>
+        </main>
 
-            <div class="historical-events" id="historicalEvents">
-                <h3 id="scienceTitle">On This Day in Science</h3>
-                <h3 id="scienceTitleCh" class="chinese-text hidden">科学史上的今天</h3>
-                <div id="scienceEvents"></div>
-                <div id="scienceEventsCh" class="chinese-text hidden"></div>
+        <aside class="sidebar" role="complementary" aria-label="Daily learning content">
+            <div class="daily-content" id="dailyContent">
+                <h3>Daily Learning</h3>
+                <div id="dailyQuote" aria-live="polite"></div>
+                <div id="dailyFact" aria-live="polite"></div>
+                <div id="dailyVocabulary" aria-live="polite"></div>
             </div>
-
-            <div class="book-publications" id="bookPublications">
-                <h3 id="booksTitle">Books Published This Year</h3>
-                <h3 id="booksTitleCh" class="chinese-text hidden">本年出版的书籍</h3>
-                <div id="booksThisYear"></div>
-                <div id="booksThisYearCh" class="chinese-text hidden"></div>
-            </div>
-
-            <div class="vocabulary-section" id="vocabularySection">
-                <h3 id="vocabTitle">Daily Vocabulary</h3>
-                <h3 id="vocabTitleCh" class="chinese-text hidden">每日词汇</h3>
-                <div id="vocabularyList"></div>
-            </div>
-        </div>
+        </aside>
     </div>
+
+    <!-- Screen reader only class -->
+    <style>
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
 
     <script src="script.js"></script>
 </body>

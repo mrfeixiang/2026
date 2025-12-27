@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Test - Multilingual Calendar 2026</title>
+</head>
+<body>
+    <h1>Console Test Results</h1>
+    <div id="results"></div>
+    
+    <script>
+        // Capture console errors
+        const originalError = console.error;
+        const errors = [];
+        
+        console.error = function(...args) {
+            errors.push(args.join(' '));
+            originalError.apply(console, args);
+        };
+        
+        // Load the main script
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        script.onerror = function(e) {
+            document.getElementById('results').innerHTML += '<p style="color: red;">Script loading error: ' + e + '</p>';
+        };
+        
+        script.onload = function() {
+            setTimeout(() => {
+                const resultsDiv = document.getElementById('results');
+                
+                if (errors.length === 0) {
+                    resultsDiv.innerHTML = '<p style="color: green;">✅ No console errors detected!</p>';
+                } else {
+                    resultsDiv.innerHTML = '<p style="color: red;">❌ Console errors detected:</p>';
+                    errors.forEach(error => {
+                        resultsDiv.innerHTML += '<p style="color: red; margin-left: 20px;">• ' + error + '</p>';
+                    });
+                }
+                
+                // Test basic functionality
+                try {
+                    const engine = new CalendarEngine(2026);
+                    const flowerManager = new FlowerImageManager();
+                    resultsDiv.innerHTML += '<p style="color: green;">✅ Core classes instantiated successfully</p>';
+                    
+                    // Test calendar generation
+                    const grid = engine.generateMonthGrid(0, 2026);
+                    if (grid && grid.length === 42) {
+                        resultsDiv.innerHTML += '<p style="color: green;">✅ Calendar grid generation works</p>';
+                    } else {
+                        resultsDiv.innerHTML += '<p style="color: red;">❌ Calendar grid generation failed</p>';
+                    }
+                    
+                    // Test flower data
+                    const flower = flowerManager.getMonthlyFlower(0);
+                    if (flower && flower.portuguese === 'Camélia') {
+                        resultsDiv.innerHTML += '<p style="color: green;">✅ Flower data retrieval works</p>';
+                    } else {
+                        resultsDiv.innerHTML += '<p style="color: red;">❌ Flower data retrieval failed</p>';
+                    }
+                    
+                } catch (error) {
+                    resultsDiv.innerHTML += '<p style="color: red;">❌ Runtime error: ' + error.message + '</p>';
+                }
+            }, 1000);
+        };
+        
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>

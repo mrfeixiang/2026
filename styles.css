@@ -1,3 +1,4 @@
+/* Enhanced responsive design and visual polish */
 * {
     margin: 0;
     padding: 0;
@@ -9,8 +10,27 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     color: #333;
+    overflow-x: hidden;
 }
 
+/* Loading and error states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.error-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #e74c3c;
+    font-size: 1.2rem;
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+    border: 2px dashed #e74c3c;
+}
+
+/* Enhanced container with better responsive behavior */
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -20,6 +40,7 @@ body {
     grid-template-rows: auto auto 1fr;
     gap: 20px;
     min-height: 100vh;
+    transition: all 0.3s ease;
 }
 
 .header {
@@ -71,19 +92,61 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.nav-btn:hover {
+.nav-btn:hover:not(:disabled) {
     background: #5a6fd8;
     transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-.month-title {
+.nav-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.nav-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+/* Add ripple effect */
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: width 0.3s, height 0.3s, top 0.3s, left 0.3s;
+    transform: translate(-50%, -50%);
+}
+
+.nav-btn:active:not(:disabled)::before {
+    width: 100px;
+    height: 100px;
+}
+
+.month-display {
+    text-align: center;
+    min-width: 300px;
+}
+
+.month-title-en, .month-title-ch {
     font-family: 'Playfair Display', serif;
     font-size: 2rem;
     color: #2c3e50;
-    min-width: 200px;
-    text-align: center;
+    margin: 5px 0;
+}
+
+.month-title-ch {
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', serif;
+    font-size: 1.8rem;
+    color: #e74c3c;
 }
 
 .calendar-container {
@@ -106,23 +169,9 @@ body {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-radius: 12px;
     border: 2px solid #dee2e6;
-    position: relative;
-    overflow: hidden;
 }
 
-.month-flower::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="paper" patternUnits="userSpaceOnUse" width="100" height="100"><rect width="100" height="100" fill="%23fefefe"/><circle cx="20" cy="20" r="1" fill="%23f0f0f0" opacity="0.3"/><circle cx="80" cy="40" r="1" fill="%23f0f0f0" opacity="0.2"/><circle cx="40" cy="80" r="1" fill="%23f0f0f0" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23paper)"/></svg>') repeat;
-    opacity: 0.3;
-    z-index: 0;
-}
-
-.flower-art {
+.flower-image {
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -131,46 +180,41 @@ body {
     background-repeat: no-repeat;
     border: 3px solid rgba(102, 126, 234, 0.3);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 1;
     transition: all 0.3s ease;
-    /* Fallback gradient in case SVG doesn't load */
     background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    font-size: 3rem;
 }
 
-.flower-art svg {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-
-.flower-art div {
-    border-radius: 50%;
-}
-
-.flower-art:hover {
+.flower-image:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.flower-name, .flower-name-chinese {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    color: #2c3e50;
-    font-weight: 600;
-    position: relative;
-    z-index: 1;
+.flower-info {
+    flex: 1;
 }
 
-.flower-name-chinese {
-    font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', serif;
+.flower-name-pt {
+    font-family: 'Playfair Display', serif;
     font-size: 2rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.flower-name-en {
+    font-size: 1.4rem;
+    color: #667eea;
+    margin-bottom: 5px;
+}
+
+.flower-name-ch {
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', serif;
+    font-size: 1.6rem;
     color: #e74c3c;
-    margin-left: 10px;
 }
 
 .calendar-grid {
@@ -201,46 +245,56 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    border-radius: 4px;
+    margin: 1px;
 }
 
-.day-cell:hover {
+.day-cell:hover:not(.other-month) {
     background: #f8f9fa;
-    transform: scale(1.02);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.day-cell:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
 }
 
 .day-cell.selected {
     background: #667eea;
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.day-cell.current-date {
+    background: #e74c3c;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.day-cell.weekend:not(.selected):not(.current-date) {
+    background: #f8f9fa;
+    color: #7f8c8d;
 }
 
 .day-cell.other-month {
     background: #ecf0f1;
     color: #bdc3c7;
+    cursor: default;
+}
+
+.day-cell.other-month:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 .day-number {
     font-weight: 600;
     font-size: 1.1rem;
     margin-bottom: 5px;
-}
-
-.day-indicator {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    margin: 1px;
-}
-
-.science-indicator {
-    background: #e74c3c;
-}
-
-.book-indicator {
-    background: #f39c12;
-}
-
-.quote-indicator {
-    background: #27ae60;
+    transition: all 0.3s ease;
 }
 
 .sidebar {
@@ -256,6 +310,12 @@ body {
     padding: 25px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.sidebar > div:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .sidebar h3 {
@@ -267,184 +327,29 @@ body {
     padding-bottom: 8px;
 }
 
-.daily-quote blockquote {
-    font-style: italic;
+.sidebar h4 {
     font-size: 1.1rem;
-    line-height: 1.6;
     color: #34495e;
-    margin-bottom: 10px;
-    position: relative;
-    padding-left: 20px;
-}
-
-.daily-quote blockquote::before {
-    content: '"';
-    font-size: 3rem;
-    color: #667eea;
-    position: absolute;
-    left: -10px;
-    top: -10px;
-    font-family: 'Playfair Display', serif;
-}
-
-.daily-quote cite {
-    color: #7f8c8d;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.event-item, .book-item {
-    margin-bottom: 15px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #667eea;
-}
-
-.event-date, .book-year {
-    font-weight: 600;
-    color: #667eea;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-}
-
-.event-description, .book-title {
-    color: #2c3e50;
-    line-height: 1.4;
-}
-
-.book-author {
-    color: #7f8c8d;
-    font-size: 0.9rem;
-    font-style: italic;
-    margin-top: 3px;
-}
-
-/* Language and Study Tools Styles */
-.language-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
-
-.lang-btn {
-    background: #667eea;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.lang-btn:hover {
-    background: #5a6fd8;
-    transform: scale(1.05);
-}
-
-.chinese-text {
-    font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.study-tools {
+    margin-bottom: 8px;
     margin-top: 15px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
 }
 
-.study-btn {
-    background: #f8f9fa;
-    border: 2px solid #667eea;
-    color: #667eea;
-    padding: 8px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
+.sidebar h4:first-child {
+    margin-top: 0;
 }
 
-.study-btn:hover {
-    background: #667eea;
-    color: white;
+.sidebar p {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 10px;
 }
 
-.vocabulary-section {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-.vocab-item {
-    margin-bottom: 15px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #27ae60;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.vocab-item:hover {
-    background: #e8f5e8;
-    transform: translateX(5px);
-}
-
-.vocab-word {
-    font-weight: 600;
-    color: #27ae60;
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-}
-
-.vocab-pronunciation {
-    color: #7f8c8d;
-    font-size: 0.9rem;
-    font-style: italic;
-    margin-bottom: 5px;
-}
-
-.vocab-meaning {
-    color: #2c3e50;
-    line-height: 1.4;
-}
-
-.vocab-chinese {
-    color: #e74c3c;
-    font-weight: 500;
-    margin-top: 5px;
-}
-
-.bilingual-content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.english-content, .chinese-content {
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.english-content {
-    background: rgba(102, 126, 234, 0.1);
-    border-left: 4px solid #667eea;
-}
-
-.chinese-content {
-    background: rgba(231, 76, 60, 0.1);
-    border-left: 4px solid #e74c3c;
-}
+/* Enhanced responsive design */
+@media (max-width: 1200px) {
     .container {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto auto;
+        max-width: 100%;
     }
     
     .sidebar {
@@ -454,15 +359,75 @@ body {
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 20px;
     }
+    
+    .calendar-container {
+        grid-column: 1;
+    }
 }
 
 @media (max-width: 768px) {
-    .header h1 {
-        font-size: 2rem;
+    .container {
+        padding: 15px;
+        gap: 15px;
     }
     
-    .month-title {
-        font-size: 1.5rem;
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .month-title-en, .month-title-ch {
+        font-size: 1.6rem;
+    }
+    
+    .month-title-ch {
+        font-size: 1.4rem;
+    }
+    
+    .calendar-navigation {
+        padding: 15px;
+        gap: 20px;
+    }
+    
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
+    .month-display {
+        min-width: 250px;
+    }
+    
+    .calendar-container {
+        padding: 20px;
+    }
+    
+    .month-flower {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .flower-image {
+        width: 100px;
+        height: 100px;
+        font-size: 2.5rem;
+    }
+    
+    .flower-name-pt {
+        font-size: 1.6rem;
+    }
+    
+    .flower-name-en {
+        font-size: 1.2rem;
+    }
+    
+    .flower-name-ch {
+        font-size: 1.4rem;
     }
     
     .day-cell {
@@ -470,129 +435,187 @@ body {
         padding: 5px;
     }
     
+    .day-number {
+        font-size: 1rem;
+    }
+    
     .sidebar {
         grid-template-columns: 1fr;
     }
-}
-/* Language and Study Tools Styles */
-.language-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+    
+    .sidebar > div {
+        padding: 20px;
+    }
 }
 
-.lang-btn {
-    background: #667eea;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 20px;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .calendar-navigation {
+        padding: 10px;
+        gap: 15px;
+    }
+    
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .month-display {
+        min-width: 200px;
+    }
+    
+    .month-title-en, .month-title-ch {
+        font-size: 1.4rem;
+    }
+    
+    .month-title-ch {
+        font-size: 1.2rem;
+    }
+    
+    .calendar-container {
+        padding: 15px;
+    }
+    
+    .month-flower {
+        padding: 15px;
+    }
+    
+    .flower-image {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+    
+    .flower-name-pt {
+        font-size: 1.4rem;
+    }
+    
+    .flower-name-en {
+        font-size: 1.1rem;
+    }
+    
+    .flower-name-ch {
+        font-size: 1.3rem;
+    }
+    
+    .day-cell {
+        min-height: 50px;
+        padding: 3px;
+    }
+    
+    .day-number {
+        font-size: 0.9rem;
+    }
+    
+    .day-header {
+        padding: 10px 3px;
+        font-size: 0.8rem;
+    }
 }
 
-.lang-btn:hover {
-    background: #5a6fd8;
-    transform: scale(1.05);
+/* Print styles */
+@media print {
+    body {
+        background: white;
+    }
+    
+    .container {
+        max-width: 100%;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .header {
+        background: white;
+        box-shadow: none;
+    }
+    
+    .calendar-navigation {
+        display: none;
+    }
+    
+    .sidebar {
+        display: none;
+    }
+    
+    .calendar-container {
+        background: white;
+        box-shadow: none;
+    }
+    
+    .day-cell {
+        border: 1px solid #ddd;
+    }
 }
 
-.chinese-text {
-    font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .day-cell {
+        border: 2px solid #000;
+    }
+    
+    .day-cell.selected {
+        background: #000;
+        color: #fff;
+    }
+    
+    .day-cell.current-date {
+        background: #000;
+        color: #fff;
+    }
 }
 
-.hidden {
-    display: none !important;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
-.study-tools {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.study-btn {
-    background: #f8f9fa;
-    border: 2px solid #667eea;
-    color: #667eea;
-    padding: 8px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.study-btn:hover {
-    background: #667eea;
-    color: white;
-}
-
-.vocabulary-section {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-.vocab-item {
-    margin-bottom: 15px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #27ae60;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.vocab-item:hover {
-    background: #e8f5e8;
-    transform: translateX(5px);
-}
-
-.vocab-word {
-    font-weight: 600;
-    color: #27ae60;
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-}
-
-.vocab-pronunciation {
-    color: #7f8c8d;
-    font-size: 0.9rem;
-    font-style: italic;
-    margin-bottom: 5px;
-}
-
-.vocab-meaning {
-    color: #2c3e50;
-    line-height: 1.4;
-}
-
-.vocab-chinese {
-    color: #e74c3c;
-    font-weight: 500;
-    margin-top: 5px;
-}
-
-.bilingual-content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.english-content, .chinese-content {
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.english-content {
-    background: rgba(102, 126, 234, 0.1);
-    border-left: 4px solid #667eea;
-}
-
-.chinese-content {
-    background: rgba(231, 76, 60, 0.1);
-    border-left: 4px solid #e74c3c;
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+    
+    .header, .calendar-navigation, .calendar-container, .sidebar > div {
+        background: rgba(52, 73, 94, 0.95);
+        color: #ecf0f1;
+    }
+    
+    .header h1, .month-title-en, .sidebar h3 {
+        color: #ecf0f1;
+    }
+    
+    .day-cell {
+        background: #34495e;
+        color: #ecf0f1;
+    }
+    
+    .day-cell:hover:not(.other-month) {
+        background: #3c5a78;
+    }
+    
+    .day-cell.other-month {
+        background: #2c3e50;
+        color: #7f8c8d;
+    }
 }

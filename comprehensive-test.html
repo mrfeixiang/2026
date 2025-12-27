@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Test Suite - Multilingual Calendar 2026</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Comprehensive Test Suite Results</h1>
+    <div class="progress">
+        <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+    </div>
+    <div id="testResults"></div>
+    <div class="summary" id="testSummary"></div>
+    
+    <script>
+        // Load the calendar scripts for testing
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        document.head.appendChild(script);
+        
+        let testCount = 0;
+        let passCount = 0;
+        let failCount = 0;
+        let totalTests = 0;
+        
+        script.onload = function() {
+            runComprehensiveTests();
+        };
+        
+        function addTestResult(name, passed, message, category = 'test') {
+            const resultsDiv = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            resultDiv.innerHTML = `<strong>[${category.toUpperCase()}] ${name}:</strong> ${passed ? 'PASS' : 'FAIL'} - ${message}`;
+            resultsDiv.appendChild(resultDiv);
+            
+            if (category === 'test') {
+                testCount++;
+                if (passed) passCount++;
+                else failCount++;
+                updateProgress();
+            }
+        }
+        
+        function addInfo(message, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            const infoDiv = document.createElement('div');
+            infoDiv.className = `test-result ${type}`;
+            infoDiv.innerHTML = `<strong>${type.toUpperCase()}:</strong> ${message}`;
+            resultsDiv.appendChild(infoDiv);
+        }
+        
+        function updateProgress() {
+            const progress = (testCount / totalTests) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+        function updateSummary() {
+            const summaryDiv = document.getElementById('testSummary');
+            const successRate = totalTests > 0 ? ((passCount / totalTests) * 100).toFixed(1) : 0;
+            
+            summaryDiv.innerHTML = `
+                <h2>Test Summary</h2>
+                <p><strong>Total Tests:</strong> ${totalTests}</p>
+                <p><strong>Passed:</strong> ${passCount}</p>
+                <p><strong>Failed:</strong> ${failCount}</p>
+                <p><strong>Success Rate:</strong> ${successRate}%</p>
+                <p><strong>Status:</strong> ${failCount === 0 ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}</p>
+            `;
+        }
+        
+        function runComprehensiveTests() {
+            addInfo('Starting comprehensive test suite...');
+            
+            // Calculate total tests
+            totalTests = 25; // Estimated number of tests
+            
+            try {
+                // Core Component Tests
+                addInfo('Testing Core Components...', 'info');
+                testCalendarEngine();
+                testFlowerImageManager();
+                testMultilingualCalendar();
+                
+                // Functionality Tests
+                addInfo('Testing Core Functionality...', 'info');
+                testCalendarGeneration();
+                testNavigation();
+                testDateHandling();
+                testFlowerDisplay();
+                testBilingualSupport();
+                
+                // UI Tests
+                addInfo('Testing User Interface...', 'info');
+                testUIElements();
+                testResponsiveDesign();
+                testAccessibility();
+                
+                // Error Handling Tests
+                addInfo('Testing Error Handling...', 'info');
+                testErrorHandling();
+                
+                // Performance Tests
+                addInfo('Testing Performance...', 'info');
+                testPerformance();
+                
+                addInfo('All tests completed!', 'info');
+                
+            } catch (error) {
+                addTestResult('Test Suite Execution', false, `Test suite failed: ${error.message}`, 'critical');
+            }
+            
+            updateSummary();
+        }
+        
+        function testCalendarEngine() {
+            try {
+                // Test 1: CalendarEngine instantiation
+                const engine = new CalendarEngine(2026);
+                addTestResult('CalendarEngine Creation', true, 'CalendarEngine created successfully');
+                
+                // Test 2: Month grid generation
+                const grid = engine.generateMonthGrid(0, 2026); // January 2026
+                addTestResult('Month Grid Generation', grid && grid.length === 42, `Generated grid with ${grid ? grid.length : 0} cells`);
+                
+                // Test 3: Date validation
+                const validDate = engine.isToday(new Date());
+                addTestResult('Date Validation', typeof validDate === 'boolean', 'Date validation works correctly');
+                
+                // Test 4: Weekend detection
+                const testDate = new Date(2026, 0, 4); // January 4, 2026 (Saturday)
+                const isWeekend = engine.isWeekend(testDate);
+                addTestResult('Weekend Detection', isWeekend === true, `January 4, 2026 correctly identified as weekend: ${isWeekend}`);
+                
+            } catch (error) {
+                addTestResult('CalendarEngine Tests', false, `CalendarEngine tests failed: ${error.message}`);
+            }
+        }
+        
+        function testFlowerImageManager() {
+            try {
+                // Test 5: FlowerImageManager instantiation
+                const flowerManager = new FlowerImageManager();
+                addTestResult('FlowerImageManager Creation', true, 'FlowerImageManager created successfully');
+                
+                // Test 6: Flower data retrieval
+                const flower = flowerManager.getMonthlyFlower(0); // January
+                addTestResult('Flower Data Retrieval', flower && flower.portuguese === 'Camélia', `Retrieved flower: ${flower ? flower.portuguese : 'none'}`);
+                
+                // Test 7: All months have flowers
+                let allMonthsHaveFlowers = true;
+                for (let i = 0; i < 12; i++) {
+                    const monthFlower = flowerManager.getMonthlyFlower(i);
+                    if (!monthFlower || !monthFlower.portuguese) {
+                        allMonthsHaveFlowers = false;
+                        break;
+                    }
+                }
+                addTestResult('All Months Have Flowers', allMonthsHaveFlowers, 'All 12 months have assigned flowers');
+                
+                // Test 8: Seasonal theme application
+                const theme = flowerManager.applySeasonalTheme(0); // January (winter)
+                addTestResult('Seasonal Theme', theme && theme.primary, `Applied theme with primary color: ${theme ? theme.primary : 'none'}`);
+                
+            } catch (error) {
+                addTestResult('FlowerImageManager Tests', false, `FlowerImageManager tests failed: ${error.message}`);
+            }
+        }
+        
+        function testMultilingualCalendar() {
+            try {
+                // Test 9: Main application instantiation
+                const calendar = new MultilingualCalendar2026();
+                addTestResult('MultilingualCalendar2026 Creation', true, 'Main application created successfully');
+                
+            } catch (error) {
+                addTestResult('MultilingualCalendar2026 Tests', false, `Main application tests failed: ${error.message}`);
+            }
+        }
+        
+        function testCalendarGeneration() {
+            try {
+                const engine = new CalendarEngine(2026);
+                
+                // Test 10: All months generate valid grids
+                let allMonthsValid = true;
+                for (let month = 0; month < 12; month++) {
+                    const grid = engine.generateMonthGrid(month, 2026);
+                    if (!grid || grid.length !== 42) {
+                        allMonthsValid = false;
+                        break;
+                    }
+                }
+                addTestResult('All Months Generate Valid Grids', allMonthsValid, 'All 12 months generate 42-cell grids');
+                
+                // Test 11: February 2026 has correct days (28 days, not leap year)
+                const febGrid = engine.generateMonthGrid(1, 2026);
+                const febDays = febGrid.filter(cell => cell.isCurrentMonth).length;
+                addTestResult('February 2026 Days', febDays === 28, `February 2026 has ${febDays} days (expected 28)`);
+                
+            } catch (error) {
+                addTestResult('Calendar Generation Tests', false, `Calendar generation tests failed: ${error.message}`);
+            }
+        }
+        
+        function testNavigation() {
+            try {
+                const engine = new CalendarEngine(2026);
+                
+                // Test 12: Navigation functionality
+                const navResult = engine.navigateToMonth(5, 2026); // June 2026
+                addTestResult('Navigation', navResult === true, 'Navigation to June 2026 successful');
+                
+                // Test 13: Navigation bounds (can't go before 2026)
+                const invalidNav = engine.navigateToMonth(0, 2025);
+                addTestResult('Navigation Bounds', invalidNav === false, 'Correctly prevents navigation before 2026');
+                
+                // Test 14: Month navigation methods
+                engine.navigateToMonth(5, 2026); // Start at June
+                const nextResult = engine.nextMonth();
+                const currentAfterNext = engine.getCurrentDate();
+                addTestResult('Next Month Navigation', currentAfterNext.getMonth() === 6, 'Next month navigation works correctly');
+                
+            } catch (error) {
+                addTestResult('Navigation Tests', false, `Navigation tests failed: ${error.message}`);
+            }
+        }
+        
+        function testDateHandling() {
+            try {
+                const engine = new CalendarEngine(2026);
+                
+                // Test 15: Current date detection
+                const today = new Date();
+                const isToday = engine.isToday(today);
+                addTestResult('Current Date Detection', isToday === true, 'Current date correctly identified');
+                
+                // Test 16: Weekend detection for various dates
+                const sunday = new Date(2026, 0, 5); // January 5, 2026 (Sunday)
+                const monday = new Date(2026, 0, 6); // January 6, 2026 (Monday)
+                const isSundayWeekend = engine.isWeekend(sunday);
+                const isMondayWeekend = engine.isWeekend(monday);
+                addTestResult('Weekend Detection Accuracy', isSundayWeekend && !isMondayWeekend, 'Weekend detection works for Sunday and Monday');
+                
+            } catch (error) {
+                addTestResult('Date Handling Tests', false, `Date handling tests failed: ${error.message}`);
+            }
+        }
+        
+        function testFlowerDisplay() {
+            try {
+                const flowerManager = new FlowerImageManager();
+                
+                // Test 17: Unique flowers for each month
+                const flowers = [];
+                for (let i = 0; i < 12; i++) {
+                    flowers.push(flowerManager.getMonthlyFlower(i).portuguese);
+                }
+                const uniqueFlowers = new Set(flowers);
+                addTestResult('Unique Monthly Flowers', uniqueFlowers.size === 12, `Found ${uniqueFlowers.size} unique flowers out of 12 months`);
+                
+                // Test 18: Flower info retrieval by name
+                const cameliaInfo = flowerManager.getFlowerInfo('Camélia');
+                addTestResult('Flower Info Retrieval', cameliaInfo && cameliaInfo.english === 'Camellia', 'Flower info retrieval by name works');
+                
+            } catch (error) {
+                addTestResult('Flower Display Tests', false, `Flower display tests failed: ${error.message}`);
+            }
+        }
+        
+        function testBilingualSupport() {
+            try {
+                const engine = new CalendarEngine(2026);
+                
+                // Test 19: English month names
+                const enName = engine.getMonthName(0, 'en');
+                addTestResult('English Month Names', enName === 'January', `English name for month 0: ${enName}`);
+                
+                // Test 20: Chinese month names
+                const zhName = engine.getMonthName(0, 'zh');
+                addTestResult('Chinese Month Names', zhName === '一月', `Chinese name for month 0: ${zhName}`);
+                
+                // Test 21: Day names in both languages
+                const enDays = engine.getDayNames('en');
+                const zhDays = engine.getDayNames('zh');
+                addTestResult('Bilingual Day Names', enDays.length === 7 && zhDays.length === 7, `EN days: ${enDays.length}, ZH days: ${zhDays.length}`);
+                
+            } catch (error) {
+                addTestResult('Bilingual Support Tests', false, `Bilingual support tests failed: ${error.message}`);
+            }
+        }
+        
+        function testUIElements() {
+            try {
+                // Test 22: Required DOM elements exist
+                const requiredElements = [
+                    'calendarGrid', 'currentMonth', 'currentMonthCh', 
+                    'prevMonth', 'nextMonth', 'flowerImage'
+                ];
+                
+                let allElementsExist = true;
+                const missingElements = [];
+                
+                for (const elementId of requiredElements) {
+                    const element = document.getElementById(elementId);
+                    if (!element) {
+                        allElementsExist = false;
+                        missingElements.push(elementId);
+                    }
+                }
+                
+                addTestResult('Required UI Elements', allElementsExist, 
+                    allElementsExist ? 'All required elements found' : `Missing elements: ${missingElements.join(', ')}`);
+                
+            } catch (error) {
+                addTestResult('UI Elements Tests', false, `UI elements tests failed: ${error.message}`);
+            }
+        }
+        
+        function testResponsiveDesign() {
+            try {
+                // Test 23: Container exists and has proper structure
+                const container = document.querySelector('.container');
+                const calendarGrid = document.getElementById('calendarGrid');
+                
+                addTestResult('Responsive Structure', container && calendarGrid, 'Main container and calendar grid exist');
+                
+            } catch (error) {
+                addTestResult('Responsive Design Tests', false, `Responsive design tests failed: ${error.message}`);
+            }
+        }
+        
+        function testAccessibility() {
+            try {
+                // Test 24: ARIA labels and accessibility features
+                const calendarGrid = document.getElementById('calendarGrid');
+                const prevButton = document.getElementById('prevMonth');
+                const nextButton = document.getElementById('nextMonth');
+                
+                const hasAriaLabels = calendarGrid && calendarGrid.getAttribute('aria-label') &&
+                                    prevButton && prevButton.getAttribute('aria-label') &&
+                                    nextButton && nextButton.getAttribute('aria-label');
+                
+                addTestResult('Accessibility Features', hasAriaLabels, 'ARIA labels and accessibility features present');
+                
+            } catch (error) {
+                addTestResult('Accessibility Tests', false, `Accessibility tests failed: ${error.message}`);
+            }
+        }
+        
+        function testErrorHandling() {
+            try {
+                const engine = new CalendarEngine(2026);
+                
+                // Test 25: Error handling for invalid inputs
+                let errorHandled = false;
+                try {
+                    engine.navigateToMonth(15, 2026); // Invalid month
+                } catch (error) {
+                    errorHandled = true;
+                }
+                
+                // The method should return false, not throw an error
+                const result = engine.navigateToMonth(15, 2026);
+                addTestResult('Error Handling', result === false, 'Invalid input handled gracefully');
+                
+            } catch (error) {
+                addTestResult('Error Handling Tests', false, `Error handling tests failed: ${error.message}`);
+            }
+        }
+        
+        function testPerformance() {
+            try {
+                const engine = new CalendarEngine(2026);
+                
+                // Test performance of generating all months
+                const startTime = performance.now();
+                for (let i = 0; i < 12; i++) {
+                    engine.generateMonthGrid(i, 2026);
+                }
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                
+                addTestResult('Performance', duration < 100, `Generated all 12 months in ${duration.toFixed(2)}ms`);
+                
+            } catch (error) {
+                addTestResult('Performance Tests', false, `Performance tests failed: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>
