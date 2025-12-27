@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Science & Literature Calendar</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="language-toggle">
+                <button id="langToggle" class="lang-btn">中文</button>
+            </div>
+            <h1 id="mainTitle">2026 Calendar</h1>
+            <h1 id="mainTitleCh" class="chinese-text hidden">2026年日历</h1>
+            <p id="subtitle" class="subtitle">A Journey Through Science & Literature</p>
+            <p id="subtitleCh" class="subtitle chinese-text hidden">科学与文学之旅</p>
+        </header>
+
+        <div class="calendar-navigation">
+            <button id="prevMonth" class="nav-btn">&lt;</button>
+            <h2 id="currentMonth" class="month-title"></h2>
+            <button id="nextMonth" class="nav-btn">&gt;</button>
+        </div>
+
+        <div class="calendar-container">
+            <div class="month-flower" id="monthFlower">
+                <div class="flower-art" id="flowerArt"></div>
+                <div class="flower-name" id="flowerName"></div>
+                <div class="flower-name-chinese" id="flowerNameChinese"></div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar will be generated here -->
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="daily-quote" id="dailyQuote">
+                <h3 id="quoteTitle">Quote of the Day</h3>
+                <h3 id="quoteTitleCh" class="chinese-text hidden">每日名言</h3>
+                <blockquote id="quoteText"></blockquote>
+                <blockquote id="quoteTextCh" class="chinese-text hidden"></blockquote>
+                <cite id="quoteAuthor"></cite>
+                <cite id="quoteAuthorCh" class="chinese-text hidden"></cite>
+                <div class="study-tools" id="studyTools">
+                    <button class="study-btn" id="pronounceBtn">🔊 Pronounce</button>
+                    <button class="study-btn" id="translateBtn">📖 Show Translation</button>
+                </div>
+            </div>
+
+            <div class="historical-events" id="historicalEvents">
+                <h3 id="scienceTitle">On This Day in Science</h3>
+                <h3 id="scienceTitleCh" class="chinese-text hidden">科学史上的今天</h3>
+                <div id="scienceEvents"></div>
+                <div id="scienceEventsCh" class="chinese-text hidden"></div>
+            </div>
+
+            <div class="book-publications" id="bookPublications">
+                <h3 id="booksTitle">Books Published This Year</h3>
+                <h3 id="booksTitleCh" class="chinese-text hidden">本年出版的书籍</h3>
+                <div id="booksThisYear"></div>
+                <div id="booksThisYearCh" class="chinese-text hidden"></div>
+            </div>
+
+            <div class="vocabulary-section" id="vocabularySection">
+                <h3 id="vocabTitle">Daily Vocabulary</h3>
+                <h3 id="vocabTitleCh" class="chinese-text hidden">每日词汇</h3>
+                <div id="vocabularyList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
