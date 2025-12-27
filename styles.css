@@ -1,0 +1,581 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    grid-template-rows: auto auto 1fr;
+    gap: 20px;
+    min-height: 100vh;
+}
+
+.header {
+    grid-column: 1 / -1;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    font-weight: 300;
+}
+
+.calendar-navigation {
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.nav-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn:hover {
+    background: #5a6fd8;
+    transform: scale(1.1);
+}
+
+.month-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #2c3e50;
+    min-width: 200px;
+    text-align: center;
+}
+
+.calendar-container {
+    grid-column: 1;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.month-flower {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px solid #dee2e6;
+    position: relative;
+    overflow: hidden;
+}
+
+.month-flower::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="paper" patternUnits="userSpaceOnUse" width="100" height="100"><rect width="100" height="100" fill="%23fefefe"/><circle cx="20" cy="20" r="1" fill="%23f0f0f0" opacity="0.3"/><circle cx="80" cy="40" r="1" fill="%23f0f0f0" opacity="0.2"/><circle cx="40" cy="80" r="1" fill="%23f0f0f0" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23paper)"/></svg>') repeat;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.flower-art {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.flower-art:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.flower-name, .flower-name-chinese {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: #2c3e50;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.flower-name-chinese {
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', serif;
+    font-size: 2rem;
+    color: #e74c3c;
+    margin-left: 10px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    background: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.day-header {
+    background: #34495e;
+    color: white;
+    padding: 15px 5px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.day-cell {
+    background: white;
+    min-height: 80px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.day-cell:hover {
+    background: #f8f9fa;
+    transform: scale(1.02);
+}
+
+.day-cell.selected {
+    background: #667eea;
+    color: white;
+}
+
+.day-cell.other-month {
+    background: #ecf0f1;
+    color: #bdc3c7;
+}
+
+.day-number {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.day-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin: 1px;
+}
+
+.science-indicator {
+    background: #e74c3c;
+}
+
+.book-indicator {
+    background: #f39c12;
+}
+
+.quote-indicator {
+    background: #27ae60;
+}
+
+.sidebar {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar > div {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.sidebar h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 8px;
+}
+
+.daily-quote blockquote {
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #34495e;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.daily-quote blockquote::before {
+    content: '"';
+    font-size: 3rem;
+    color: #667eea;
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    font-family: 'Playfair Display', serif;
+}
+
+.daily-quote cite {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.event-item, .book-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.event-date, .book-year {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.event-description, .book-title {
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+.book-author {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 3px;
+}
+
+/* Language and Study Tools Styles */
+.language-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.lang-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.lang-btn:hover {
+    background: #5a6fd8;
+    transform: scale(1.05);
+}
+
+.chinese-text {
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.study-tools {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.study-btn {
+    background: #f8f9fa;
+    border: 2px solid #667eea;
+    color: #667eea;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.study-btn:hover {
+    background: #667eea;
+    color: white;
+}
+
+.vocabulary-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.vocab-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #27ae60;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vocab-item:hover {
+    background: #e8f5e8;
+    transform: translateX(5px);
+}
+
+.vocab-word {
+    font-weight: 600;
+    color: #27ae60;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.vocab-pronunciation {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 5px;
+}
+
+.vocab-meaning {
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+.vocab-chinese {
+    color: #e74c3c;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.bilingual-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.english-content, .chinese-content {
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.english-content {
+    background: rgba(102, 126, 234, 0.1);
+    border-left: 4px solid #667eea;
+}
+
+.chinese-content {
+    background: rgba(231, 76, 60, 0.1);
+    border-left: 4px solid #e74c3c;
+}
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+    }
+    
+    .sidebar {
+        grid-column: 1;
+        grid-row: 4;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .month-title {
+        font-size: 1.5rem;
+    }
+    
+    .day-cell {
+        min-height: 60px;
+        padding: 5px;
+    }
+    
+    .sidebar {
+        grid-template-columns: 1fr;
+    }
+}
+/* Language and Study Tools Styles */
+.language-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.lang-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.lang-btn:hover {
+    background: #5a6fd8;
+    transform: scale(1.05);
+}
+
+.chinese-text {
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.study-tools {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.study-btn {
+    background: #f8f9fa;
+    border: 2px solid #667eea;
+    color: #667eea;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.study-btn:hover {
+    background: #667eea;
+    color: white;
+}
+
+.vocabulary-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.vocab-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #27ae60;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vocab-item:hover {
+    background: #e8f5e8;
+    transform: translateX(5px);
+}
+
+.vocab-word {
+    font-weight: 600;
+    color: #27ae60;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.vocab-pronunciation {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 5px;
+}
+
+.vocab-meaning {
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+.vocab-chinese {
+    color: #e74c3c;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.bilingual-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.english-content, .chinese-content {
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.english-content {
+    background: rgba(102, 126, 234, 0.1);
+    border-left: 4px solid #667eea;
+}
+
+.chinese-content {
+    background: rgba(231, 76, 60, 0.1);
+    border-left: 4px solid #e74c3c;
+}
