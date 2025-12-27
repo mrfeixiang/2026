@@ -128,11 +128,28 @@ body {
     border-radius: 50%;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     border: 3px solid rgba(102, 126, 234, 0.3);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1;
     transition: all 0.3s ease;
+    /* Fallback gradient in case SVG doesn't load */
+    background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.flower-art svg {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.flower-art div {
+    border-radius: 50%;
 }
 
 .flower-art:hover {
