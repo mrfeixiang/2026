@@ -36,6 +36,8 @@ class BilingualCalendar2026 {
         this.pronounceBtn.addEventListener('click', () => this.pronounceQuote());
         this.translateBtn.addEventListener('click', () => this.toggleTranslation());
         
+        // Initialize the display
+        this.updateLanguageDisplay();
         this.renderCalendar();
         this.updateSidebar();
     }
@@ -412,9 +414,36 @@ class BilingualCalendar2026 {
         const flowerName = document.getElementById('flowerName');
         const flowerNameChinese = document.getElementById('flowerNameChinese');
         
-        // Create SVG as background
-        const svgDataUrl = `data:image/svg+xml;base64,${btoa(flower.svg)}`;
-        flowerArt.style.backgroundImage = `url("${svgDataUrl}")`;
+        console.log('Updating flower for month:', month, flower);
+        
+        // Method 1: Try SVG as background
+        try {
+            const svgDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(flower.svg)}`;
+            flowerArt.style.backgroundImage = `url("${svgDataUrl}")`;
+            flowerArt.style.backgroundSize = 'cover';
+            flowerArt.style.backgroundPosition = 'center';
+            flowerArt.style.backgroundRepeat = 'no-repeat';
+            console.log('SVG loaded successfully for:', flower.en);
+        } catch (error) {
+            console.log('SVG loading error, trying alternative method:', error);
+            
+            // Method 2: Try inserting SVG directly
+            try {
+                flowerArt.innerHTML = flower.svg;
+                flowerArt.style.backgroundImage = 'none';
+                const svgElement = flowerArt.querySelector('svg');
+                if (svgElement) {
+                    svgElement.style.width = '100%';
+                    svgElement.style.height = '100%';
+                    svgElement.style.borderRadius = '50%';
+                }
+            } catch (innerError) {
+                console.log('Direct SVG insertion failed:', innerError);
+                // Method 3: Fallback to gradient with flower emoji
+                flowerArt.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 3rem;">${this.getFlowerEmoji(month)}</div>`;
+                flowerArt.style.background = `linear-gradient(135deg, ${this.getFlowerColor(month)})`;
+            }
+        }
         
         if (this.currentLanguage === 'zh') {
             flowerName.textContent = flower.zh;
@@ -423,6 +452,29 @@ class BilingualCalendar2026 {
             flowerName.textContent = flower.en;
             flowerNameChinese.textContent = flower.zh;
         }
+    }
+
+    getFlowerEmoji(month) {
+        const emojis = ['🌸', '🌺', '🌸', '🌸', '🌹', '🪷', '🌻', '🌼', '🌻', '🌺', '🌼', '🌻'];
+        return emojis[month] || '🌸';
+    }
+
+    getFlowerColor(month) {
+        const colors = [
+            '#ffb3ba, #ff7f7f', // January - Pink
+            '#ff6b9d, #c44569', // February - Deep pink
+            '#ffb3d9, #ff80bf', // March - Light pink
+            '#ffb3d9, #ff99cc', // April - Cherry pink
+            '#ff6b9d, #c44569', // May - Peony pink
+            '#ffb3d9, #ff80bf', // June - Lotus pink
+            '#9370DB, #4B0082', // July - Purple
+            '#FFD700, #FFA500', // August - Gold
+            '#FFD700, #FFA500', // September - Yellow
+            '#FF6347, #DC143C', // October - Red
+            '#FFFACD, #F0E68C', // November - Light yellow
+            '#FFFF99, #FFD700'  // December - Bright yellow
+        ];
+        return colors[month] || '#ff6b9d, #c44569';
     }
 
     createDayCell(day, isOtherMonth) {
