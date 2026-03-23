@@ -67,6 +67,25 @@ body {
     font-weight: 300;
 }
 
+.piano-hero-link {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #e0d0ff;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 12px rgba(100, 60, 200, 0.35);
+}
+.piano-hero-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(100, 60, 200, 0.55);
+}
+
 .calendar-navigation {
     grid-column: 1;
     display: flex;
