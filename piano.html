@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Piano Hero</title>
+  <link rel="stylesheet" href="piano.css">
+</head>
+<body>
+
+  <!-- SCREEN 1: Main Menu -->
+  <div id="screen-menu" class="screen active">
+    <div class="menu-content">
+      <h1 class="game-title">Piano Hero</h1>
+      <p class="menu-subtitle">Press the keys when notes reach the bottom!</p>
+      <div class="menu-buttons">
+        <button id="btn-freeplay" class="btn btn-primary">Free Play</button>
+        <button id="btn-songs" class="btn btn-secondary">Practice Songs</button>
+      </div>
+      <div class="menu-controls">
+        <h3>Controls</h3>
+        <div class="control-row">
+          <span class="key-badge">A</span><span class="key-badge">S</span><span class="key-badge">D</span><span class="key-badge">F</span><span class="key-badge">G</span><span class="key-badge">H</span><span class="key-badge">J</span><span class="key-badge">K</span>
+          <span class="control-label">= White Keys (C D E F G A B C5)</span>
+        </div>
+        <div class="control-row">
+          <span class="key-badge black-kbd">W</span><span class="key-badge black-kbd">E</span><span class="key-badge black-kbd">T</span><span class="key-badge black-kbd">Y</span><span class="key-badge black-kbd">U</span>
+          <span class="control-label">= Black Keys (C# D# F# G# A#)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Song Selection -->
+  <div id="screen-songs" class="screen">
+    <div class="songs-content">
+      <h2>Choose a Song</h2>
+      <div id="song-list" class="song-list"></div>
+      <button id="btn-back-menu" class="btn btn-back">← Back</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: The Game -->
+  <div id="screen-game" class="screen">
+
+    <!-- HUD -->
+    <div id="hud">
+      <div class="hud-left">
+        <span id="hud-score">Score: 0</span>
+        <span id="hud-combo" class="combo-display">Combo: 0x</span>
+      </div>
+      <div class="hud-center">
+        <span id="hud-song-name">Free Play</span>
+      </div>
+      <div class="hud-right">
+        <button id="btn-pause" class="btn btn-hud">⏸ Pause</button>
+      </div>
+    </div>
+
+    <!-- Countdown overlay -->
+    <div id="countdown-overlay" class="hidden">
+      <div id="countdown-number"></div>
+    </div>
+
+    <!-- Falling notes area -->
+    <div id="note-highway">
+      <div class="lane" id="lane-C4"  data-note="C4">
+        <div class="lane-label">A</div>
+        <div class="lane-line"></div>
+      </div>
+      <div class="lane" id="lane-D4"  data-note="D4">
+        <div class="lane-label">S</div>
+        <div class="lane-line"></div>
+      </div>
+      <div class="lane" id="lane-E4"  data-note="E4">
+        <div class="lane-label">D</div>
+        <div class="lane-line"></div>
+      </div>
+      <div class="lane" id="lane-F4"  data-note="F4">
+        <div class="lane-label">F</div>
+        <div class="lane-line"></div>
+      </div>
+      <div class="lane" id="lane-G4"  data-note="G4">
+        <div class="lane-label">G</div>
+        <div class="lane-line"></div>
+      </div>
+      <div class="lane" id="lane-A4"  data-note="A4">
+        <div class="lane-label">H</div>
+        <div class="lane-line"></div>
+      </div>
+      <div class="lane" id="lane-B4"  data-note="B4">
+        <div class="lane-label">J</div>
+        <div class="lane-line"></div>
+      </div>
+      <div class="lane" id="lane-C5"  data-note="C5">
+        <div class="lane-label">K</div>
+        <div class="lane-line"></div>
+      </div>
+      <!-- Black key lanes (overlaid) -->
+      <div class="lane black-lane" id="lane-Cs4" data-note="C#4"></div>
+      <div class="lane black-lane" id="lane-Ds4" data-note="D#4"></div>
+      <div class="lane black-lane" id="lane-Fs4" data-note="F#4"></div>
+      <div class="lane black-lane" id="lane-Gs4" data-note="G#4"></div>
+      <div class="lane black-lane" id="lane-As4" data-note="A#4"></div>
+      <!-- Hit zone -->
+      <div id="hit-zone"></div>
+    </div>
+
+    <!-- Feedback popup -->
+    <div id="feedback-popup"></div>
+
+    <!-- Piano keyboard -->
+    <div id="piano-keyboard">
+      <!-- White keys -->
+      <div class="white-key" id="key-C4"  data-note="C4">
+        <div class="key-note-label">C</div>
+        <div class="key-kbd-label">A</div>
+      </div>
+      <div class="white-key" id="key-D4"  data-note="D4">
+        <div class="key-note-label">D</div>
+        <div class="key-kbd-label">S</div>
+      </div>
+      <div class="white-key" id="key-E4"  data-note="E4">
+        <div class="key-note-label">E</div>
+        <div class="key-kbd-label">D</div>
+      </div>
+      <div class="white-key" id="key-F4"  data-note="F4">
+        <div class="key-note-label">F</div>
+        <div class="key-kbd-label">F</div>
+      </div>
+      <div class="white-key" id="key-G4"  data-note="G4">
+        <div class="key-note-label">G</div>
+        <div class="key-kbd-label">G</div>
+      </div>
+      <div class="white-key" id="key-A4"  data-note="A4">
+        <div class="key-note-label">A</div>
+        <div class="key-kbd-label">H</div>
+      </div>
+      <div class="white-key" id="key-B4"  data-note="B4">
+        <div class="key-note-label">B</div>
+        <div class="key-kbd-label">J</div>
+      </div>
+      <div class="white-key" id="key-C5"  data-note="C5">
+        <div class="key-note-label">C</div>
+        <div class="key-kbd-label">K</div>
+      </div>
+      <!-- Black keys (absolutely positioned) -->
+      <div class="black-key" id="key-Cs4" data-note="C#4" data-pos="0">
+        <div class="key-kbd-label">W</div>
+      </div>
+      <div class="black-key" id="key-Ds4" data-note="D#4" data-pos="1">
+        <div class="key-kbd-label">E</div>
+      </div>
+      <div class="black-key" id="key-Fs4" data-note="F#4" data-pos="3">
+        <div class="key-kbd-label">T</div>
+      </div>
+      <div class="black-key" id="key-Gs4" data-note="G#4" data-pos="4">
+        <div class="key-kbd-label">Y</div>
+      </div>
+      <div class="black-key" id="key-As4" data-note="A#4" data-pos="5">
+        <div class="key-kbd-label">U</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCREEN 4: Pause overlay -->
+  <div id="screen-pause" class="screen overlay">
+    <div class="overlay-box">
+      <h2>Paused</h2>
+      <button id="btn-resume" class="btn btn-primary">▶ Resume</button>
+      <button id="btn-quit"   class="btn btn-danger">Quit to Menu</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: Results -->
+  <div id="screen-results" class="screen">
+    <div class="results-content">
+      <h2>Song Complete!</h2>
+      <div id="result-song-name" class="result-song-name"></div>
+      <div id="result-grade" class="result-grade"></div>
+      <div id="result-score" class="result-score"></div>
+      <div id="result-new-best" class="result-new-best hidden">🏆 New Best!</div>
+      <div id="result-stats" class="result-stats"></div>
+      <div class="result-buttons">
+        <button id="btn-play-again" class="btn btn-primary">Play Again</button>
+        <button id="btn-result-menu" class="btn btn-secondary">Main Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="piano.js"></script>
+</body>
+</html>
