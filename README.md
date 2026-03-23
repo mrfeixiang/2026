@@ -1,25 +1,15 @@
 # 🌸 Multilingual Calendar 2026 | 多语言日历 2026 | 다국어 달력 2026
 
-[![Deploy to GitHub Pages](https://github.com/mrfeixiang/2026/actions/workflows/deploy.yml/badge.svg)](https://github.com/mrfeixiang/2026/actions/workflows/deploy.yml)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue)](https://mrfeixiang.github.io/2026/)
-[![Piano Hero](https://img.shields.io/badge/🎹%20Piano%20Hero-Play%20Now-purple)](https://mrfeixiang.github.io/2026/piano.html)
+## Piano Hero
 
----
+Play: https://mrfeixiang.github.io/2026/piano.html
 
-## 🎹 Piano Hero
+A Guitar Hero-style piano game in the browser. Press keyboard keys when falling notes hit the bottom to score points.
 
-| | |
-|---|---|
-| **English** | [▶ Play Piano Hero Demo](https://mrfeixiang.github.io/2026/piano.html) |
-| **中文** | [▶ 立即游玩钢琴英雄](https://mrfeixiang.github.io/2026/piano.html) |
-| **한국어** | [▶ 피아노 히어로 플레이](https://mrfeixiang.github.io/2026/piano.html) |
-
-A Guitar Hero-style piano game playable in the browser. Press keyboard keys when falling notes hit the bottom to score points.
-
-- **Free Play** — improvise freely with any key
-- **Practice Songs** — follow along to Twinkle Twinkle, Ode to Joy, Happy Birthday, and more
-- **Scoring** — Perfect / Good hits build combos and multiply your score
-- **Controls**: `A S D F G H J K` = white keys C–C5 · `W E T Y U` = black keys
+- Free Play: improvise freely with any key
+- Practice Songs: Twinkle Twinkle, Ode to Joy, Happy Birthday, and more
+- Scoring: Perfect / Good hits build combos and multiply your score
+- Controls: A S D F G H J K = white keys C-C5, W E T Y U = black keys
 
 ---
 
