@@ -2,7 +2,7 @@
 
 ## Piano Hero
 
-Play: https://mrfeixiang.github.io/2026/piano.html
+Play: https://mrfeixiang.github.io/piano-hero/
 
 A Guitar Hero-style piano game in the browser. Press keyboard keys when falling notes hit the bottom to score points.
 
