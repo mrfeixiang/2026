@@ -1,0 +1,647 @@
+/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0a0a0f;
+  --bg-card:     #12121a;
+  --bg-card-2:   #1a1a28;
+  --text:        #e0e0f0;
+  --text-dim:    #7070a0;
+  --border:      rgba(255,255,255,0.08);
+  --hit-zone-h:  18px;
+  --keyboard-h:  160px;
+  --hud-h:       54px;
+
+  /* Note lane colors */
+  --color-C4:  #ff4444;
+  --color-D4:  #ff8800;
+  --color-E4:  #ffdd00;
+  --color-F4:  #88ff00;
+  --color-G4:  #00ffcc;
+  --color-A4:  #0088ff;
+  --color-B4:  #8844ff;
+  --color-C5:  #ff44aa;
+  --color-Cs4: #cc2222;
+  --color-Ds4: #cc6600;
+  --color-Fs4: #55aa00;
+  --color-Gs4: #007a66;
+  --color-As4: #005fcc;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+button { cursor: pointer; border: none; outline: none; }
+.hidden { display: none !important; }
+
+/* ─── Screens ───────────────────────────────────────────────────────────────── */
+.screen {
+  display: none;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.screen.active { display: flex; }
+
+.screen.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────────────────── */
+.btn {
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+  user-select: none;
+}
+.btn:hover  { transform: translateY(-2px); }
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: linear-gradient(135deg, #5533ff, #9944ff);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(120,60,255,0.45);
+}
+.btn-primary:hover { box-shadow: 0 6px 28px rgba(120,60,255,0.7); }
+
+.btn-secondary {
+  background: var(--bg-card-2);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.btn-secondary:hover { background: #22223a; }
+
+.btn-danger {
+  background: linear-gradient(135deg, #cc2222, #ff4444);
+  color: #fff;
+}
+
+.btn-back {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  margin-top: 24px;
+}
+.btn-back:hover { color: var(--text); border-color: rgba(255,255,255,0.3); }
+
+.btn-hud {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.btn-hud:hover { background: rgba(255,255,255,0.15); }
+
+/* ─── Menu Screen ───────────────────────────────────────────────────────────── */
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 500px;
+  width: 100%;
+  padding: 32px 16px;
+}
+
+.game-title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #ff44aa, #8844ff, #00ffcc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.menu-subtitle {
+  color: var(--text-dim);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+}
+.menu-buttons .btn { text-align: center; width: 100%; }
+
+.menu-controls {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  width: 100%;
+  max-width: 380px;
+}
+.menu-controls h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.key-badge {
+  background: var(--bg-card-2);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 3px solid rgba(255,255,255,0.2);
+  border-radius: 5px;
+  padding: 2px 7px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  font-weight: 700;
+}
+.key-badge.black-kbd {
+  background: #1a1a2e;
+  border-color: rgba(255,255,255,0.1);
+}
+.control-label { font-size: 0.8rem; color: var(--text-dim); }
+
+/* ─── Song Selection Screen ─────────────────────────────────────────────────── */
+.songs-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+  padding: 24px 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+.songs-content h2 {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.song-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  user-select: none;
+}
+.song-card:hover {
+  background: var(--bg-card-2);
+  border-color: rgba(136,68,255,0.5);
+  transform: translateX(4px);
+}
+.song-card:active { transform: translateX(2px); }
+
+.song-card-left { display: flex; flex-direction: column; gap: 4px; }
+.song-title { font-size: 1.1rem; font-weight: 700; }
+.song-meta  { font-size: 0.8rem; color: var(--text-dim); }
+
+.song-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.difficulty-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.diff-easy   { background: rgba(136,255,0,0.2);  color: #88ff00; }
+.diff-medium { background: rgba(255,136,0,0.2);  color: #ff8800; }
+.diff-hard   { background: rgba(255,68,68,0.2);  color: #ff4444; }
+
+.song-best-score { font-size: 0.78rem; color: var(--text-dim); }
+
+/* ─── Game Screen Layout ────────────────────────────────────────────────────── */
+#screen-game {
+  display: none;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  overflow: hidden;
+}
+#screen-game.active { display: flex; }
+
+/* ─── HUD ───────────────────────────────────────────────────────────────────── */
+#hud {
+  height: var(--hud-h);
+  background: rgba(0,0,0,0.6);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+.hud-left  { display: flex; gap: 20px; align-items: center; }
+.hud-center { font-weight: 700; font-size: 1rem; color: var(--text-dim); }
+.hud-right { display: flex; gap: 8px; }
+
+#hud-score {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffdd00;
+}
+.combo-display {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-G4);
+  transition: transform 0.15s;
+}
+.combo-display.pop {
+  transform: scale(1.5);
+}
+
+/* ─── Countdown Overlay ─────────────────────────────────────────────────────── */
+#countdown-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+#countdown-number {
+  font-size: 8rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 40px rgba(255,255,255,0.8);
+  animation: countdown-pulse 0.9s ease-in-out;
+}
+@keyframes countdown-pulse {
+  0%   { transform: scale(1.6); opacity: 0; }
+  30%  { transform: scale(1.0); opacity: 1; }
+  80%  { transform: scale(1.0); opacity: 1; }
+  100% { transform: scale(0.7); opacity: 0; }
+}
+
+/* ─── Note Highway ──────────────────────────────────────────────────────────── */
+#note-highway {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #050508, #0a0a14);
+}
+
+.lane {
+  flex: 1;
+  border-right: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.lane:last-of-type { border-right: none; }
+
+/* Lane subtle background glow per note */
+#lane-C4  { background: rgba(255, 68, 68,  0.03); }
+#lane-D4  { background: rgba(255,136,  0,  0.03); }
+#lane-E4  { background: rgba(255,221,  0,  0.03); }
+#lane-F4  { background: rgba(136,255,  0,  0.03); }
+#lane-G4  { background: rgba(  0,255,204,  0.03); }
+#lane-A4  { background: rgba(  0,136,255,  0.03); }
+#lane-B4  { background: rgba(136, 68,255,  0.03); }
+#lane-C5  { background: rgba(255, 68,170,  0.03); }
+
+.lane-label {
+  position: absolute;
+  bottom: calc(var(--hit-zone-h) + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.15);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Black key lanes: narrow, absolutely positioned over white lanes */
+.black-lane {
+  position: absolute;
+  top: 0;
+  width: 6.25%;  /* 50% of 1/8 white key width */
+  z-index: 3;
+  flex: none;
+  overflow: hidden;
+  border-right: none;
+}
+/* Positions computed as: (whiteKeyIndex + 0.625) / 8 * 100% - 3.125% */
+#lane-Cs4 { left: calc(0.625 / 8 * 100% - 3.125%); }
+#lane-Ds4 { left: calc(1.625 / 8 * 100% - 3.125%); }
+#lane-Fs4 { left: calc(3.625 / 8 * 100% - 3.125%); }
+#lane-Gs4 { left: calc(4.625 / 8 * 100% - 3.125%); }
+#lane-As4 { left: calc(5.625 / 8 * 100% - 3.125%); }
+
+/* Hit zone strip */
+#hit-zone {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--hit-zone-h);
+  background: rgba(255,255,255,0.07);
+  border-top: 2px solid rgba(255,255,255,0.25);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* ─── Falling Notes ─────────────────────────────────────────────────────────── */
+.falling-note {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  height: 38px;
+  border-radius: 7px;
+  will-change: transform;
+  transform: translateZ(0);
+  transition: opacity 0.12s;
+  z-index: 2;
+}
+.falling-note.miss-flash {
+  opacity: 0.2;
+  transition: opacity 0.15s;
+}
+.falling-note.hit-pop {
+  animation: note-hit-pop 0.2s ease-out forwards;
+}
+
+@keyframes note-hit-pop {
+  0%   { transform: scaleY(1.2); opacity: 1; }
+  100% { transform: scaleY(0); opacity: 0; }
+}
+
+/* Per-note colors */
+.note-C4  { background: var(--color-C4);  box-shadow: 0 0 10px var(--color-C4); }
+.note-D4  { background: var(--color-D4);  box-shadow: 0 0 10px var(--color-D4); }
+.note-E4  { background: var(--color-E4);  box-shadow: 0 0 10px var(--color-E4); }
+.note-F4  { background: var(--color-F4);  box-shadow: 0 0 10px var(--color-F4); }
+.note-G4  { background: var(--color-G4);  box-shadow: 0 0 10px var(--color-G4); }
+.note-A4  { background: var(--color-A4);  box-shadow: 0 0 10px var(--color-A4); }
+.note-B4  { background: var(--color-B4);  box-shadow: 0 0 10px var(--color-B4); }
+.note-C5  { background: var(--color-C5);  box-shadow: 0 0 10px var(--color-C5); }
+.note-Cs4 { background: var(--color-Cs4); box-shadow: 0 0 10px var(--color-Cs4); }
+.note-Ds4 { background: var(--color-Ds4); box-shadow: 0 0 10px var(--color-Ds4); }
+.note-Fs4 { background: var(--color-Fs4); box-shadow: 0 0 10px var(--color-Fs4); }
+.note-Gs4 { background: var(--color-Gs4); box-shadow: 0 0 10px var(--color-Gs4); }
+.note-As4 { background: var(--color-As4); box-shadow: 0 0 10px var(--color-As4); }
+
+/* ─── Feedback Popup ────────────────────────────────────────────────────────── */
+#feedback-popup {
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.4rem;
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 150;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+  opacity: 0;
+}
+#feedback-popup.show-perfect {
+  color: #ffd700;
+  animation: feedback-anim 0.55s ease-out forwards;
+}
+#feedback-popup.show-good {
+  color: #00ff99;
+  animation: feedback-anim 0.55s ease-out forwards;
+}
+#feedback-popup.show-miss {
+  color: #ff4444;
+  animation: feedback-anim 0.55s ease-out forwards;
+}
+
+@keyframes feedback-anim {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0)   scale(1.3); }
+  60%  { opacity: 1; transform: translateX(-50%) translateY(-10px) scale(1.0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-30px) scale(0.9); }
+}
+
+/* ─── Piano Keyboard ────────────────────────────────────────────────────────── */
+#piano-keyboard {
+  height: var(--keyboard-h);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  background: #111;
+  border-top: 2px solid rgba(255,255,255,0.12);
+  user-select: none;
+  z-index: 20;
+}
+
+.white-key {
+  flex: 1;
+  background: #e8e8e8;
+  border: 1px solid #888;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 8px;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  transition: background 0.06s;
+  -webkit-tap-highlight-color: transparent;
+}
+.white-key:active, .white-key.active {
+  background: #ccc;
+}
+
+/* Per-note active colors for white keys */
+#key-C4.active  { background: color-mix(in srgb, var(--color-C4) 40%, #fff); }
+#key-D4.active  { background: color-mix(in srgb, var(--color-D4) 40%, #fff); }
+#key-E4.active  { background: color-mix(in srgb, var(--color-E4) 40%, #fff); }
+#key-F4.active  { background: color-mix(in srgb, var(--color-F4) 40%, #fff); }
+#key-G4.active  { background: color-mix(in srgb, var(--color-G4) 40%, #fff); }
+#key-A4.active  { background: color-mix(in srgb, var(--color-A4) 40%, #fff); }
+#key-B4.active  { background: color-mix(in srgb, var(--color-B4) 40%, #fff); }
+#key-C5.active  { background: color-mix(in srgb, var(--color-C5) 40%, #fff); }
+
+.key-note-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #888;
+  line-height: 1;
+}
+.key-kbd-label {
+  font-size: 0.65rem;
+  font-family: monospace;
+  font-weight: 700;
+  color: #aaa;
+  background: rgba(0,0,0,0.08);
+  border-radius: 3px;
+  padding: 1px 4px;
+  margin-top: 2px;
+  line-height: 1;
+}
+
+.black-key .key-kbd-label {
+  font-size: 0.55rem;
+  color: #ccc;
+  background: rgba(255,255,255,0.12);
+}
+
+.black-key {
+  position: absolute;
+  top: 0;
+  width: 7%;
+  height: 62%;
+  background: #1a1a1a;
+  z-index: 2;
+  border-radius: 0 0 5px 5px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 6px;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
+  transition: background 0.06s;
+  -webkit-tap-highlight-color: transparent;
+}
+.black-key:active, .black-key.active {
+  background: #333;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Black key active colors */
+#key-Cs4.active { background: var(--color-Cs4); }
+#key-Ds4.active { background: var(--color-Ds4); }
+#key-Fs4.active { background: var(--color-Fs4); }
+#key-Gs4.active { background: var(--color-Gs4); }
+#key-As4.active { background: var(--color-As4); }
+
+/* Black key positions: centered over the gap between adjacent white keys */
+/* White key width = 100%/8 = 12.5%. Black key centered at (n + 0.625) * 12.5% */
+#key-Cs4 { left: calc(0.625 * 12.5% - 3.5%); }
+#key-Ds4 { left: calc(1.625 * 12.5% - 3.5%); }
+/* No black key between E and F (index 2 → 3 gap) */
+#key-Fs4 { left: calc(3.625 * 12.5% - 3.5%); }
+#key-Gs4 { left: calc(4.625 * 12.5% - 3.5%); }
+#key-As4 { left: calc(5.625 * 12.5% - 3.5%); }
+/* No black key between B and C */
+
+/* ─── Pause Overlay ─────────────────────────────────────────────────────────── */
+.overlay-box {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 40px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.overlay-box h2 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+.overlay-box .btn { width: 220px; text-align: center; }
+
+/* ─── Results Screen ────────────────────────────────────────────────────────── */
+.results-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px 16px;
+  max-width: 480px;
+  width: 100%;
+}
+.results-content h2 {
+  font-size: 2rem;
+  font-weight: 900;
+}
+.result-song-name {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+}
+.result-grade {
+  font-size: 6rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.grade-S { color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.7); }
+.grade-A { color: #00ff99; text-shadow: 0 0 30px rgba(0,255,153,0.5); }
+.grade-B { color: #0088ff; text-shadow: 0 0 30px rgba(0,136,255,0.5); }
+.grade-C { color: #ff8800; }
+.grade-D { color: #888; }
+
+.result-score {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffdd00;
+}
+.result-new-best {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffd700;
+  background: rgba(255,215,0,0.1);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 20px;
+  padding: 6px 18px;
+}
+.result-stats {
+  display: flex;
+  gap: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-size: 0.9rem;
+}
+.stat-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+.stat-value { font-size: 1.4rem; font-weight: 800; }
+.stat-perfect { color: #ffd700; }
+.stat-good    { color: #00ff99; }
+.stat-miss    { color: #ff4444; }
+
+.result-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
