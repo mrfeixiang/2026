@@ -195,12 +195,23 @@ body {
 .mode-btn:hover { opacity: 0.8; }
 #cameraStatus {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-  font-size: 18px;
-  color: #f00;
+  top: 20px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  font-size: 16px;
+  color: #fff;
+  background: rgba(200, 0, 0, 0.9);
+  padding: 12px 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  text-align: center;
   display: none;
+}
+#cameraStatus code {
+  background: rgba(0,0,0,0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
 }
 </style>
 </head>
@@ -284,6 +295,16 @@ const poseCanvas = document.getElementById('poseCanvas');
 const poseCtx = poseCanvas.getContext('2d');
 
 async function startCamera() {
+  const statusEl = document.getElementById('cameraStatus');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    const insecure = location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1';
+    statusEl.innerHTML = insecure
+      ? '⚠️ Camera requires HTTPS or localhost.<br>Open via <code>python3 -m http.server</code> then http://localhost:8000/camera-tetris.html'
+      : '⚠️ getUserMedia not supported in this browser';
+    statusEl.style.display = 'block';
+    useCamera = false;
+    return false;
+  }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }
@@ -295,8 +316,12 @@ async function startCamera() {
     return true;
   } catch (e) {
     console.warn('Camera not available:', e);
-    document.getElementById('cameraStatus').textContent = 'Camera not available - use keyboard';
-    document.getElementById('cameraStatus').style.display = 'block';
+    let msg = '⚠️ Camera error: ' + e.name;
+    if (e.name === 'NotAllowedError') msg = '⚠️ Camera permission denied. Allow it in browser settings and reload.';
+    else if (e.name === 'NotFoundError') msg = '⚠️ No camera found on this device.';
+    else if (location.protocol === 'file:') msg = '⚠️ file:// blocks camera. Serve via http://localhost instead.';
+    statusEl.innerHTML = msg;
+    statusEl.style.display = 'block';
     useCamera = false;
     return false;
   }
