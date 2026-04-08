@@ -1,0 +1,288 @@
+/* Camera Fire — retro CRT finger-gun shooter */
+
+:root {
+  --bg: #0a0d0a;
+  --ink: #c8ffd0;
+  --ink-dim: #6fb87a;
+  --accent: #ffe66b;
+  --hot: #ff4d2e;
+  --frame: #1a1f1a;
+  --frame-edge: #2a302a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  color: var(--ink);
+  font-family: "VT323", "IBM Plex Mono", "Courier New", monospace;
+  overflow: hidden;
+  -webkit-font-smoothing: none;
+}
+
+@font-face {
+  font-family: "VT323";
+  src: url("https://fonts.gstatic.com/s/vt323/v17/pxiKyp0ihIEF2isfFJU.woff2") format("woff2");
+  font-display: swap;
+}
+
+.crt {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at center, #0a140a 0%, #000 80%);
+  padding: 24px;
+}
+
+.crt-frame {
+  position: relative;
+  width: min(1100px, 100%);
+  height: min(760px, 100%);
+  background: var(--frame);
+  border: 2px solid var(--frame-edge);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow:
+    0 0 0 2px #000,
+    0 0 60px rgba(80, 255, 120, 0.08),
+    inset 0 0 80px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ---------- Top URL bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0e140e;
+  border: 1px solid #2a352a;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 18px;
+  flex-wrap: wrap;
+}
+
+.url {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink);
+  min-width: 220px;
+}
+
+.url .proto { color: var(--ink-dim); }
+.url .title { color: var(--ink); }
+.caret {
+  color: var(--ink);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 16px;
+  color: var(--ink-dim);
+}
+
+.controls .ctl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.controls input[type="range"] {
+  width: 110px;
+  accent-color: var(--accent);
+}
+
+.controls input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.controls .hint {
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* ---------- Stage ---------- */
+.stage {
+  position: relative;
+  flex: 1 1 auto;
+  background: #000;
+  border: 1px solid #2a352a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+#video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* mirror so it feels natural */
+  display: block;
+}
+
+#canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hud.hidden { display: none; }
+
+.muteIcon {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-size: 22px;
+  color: var(--ink);
+  opacity: 0.7;
+}
+
+/* Permission overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 10, 0, 0.85);
+  z-index: 5;
+}
+
+.overlay.hidden { display: none; }
+
+.panel {
+  text-align: center;
+  border: 1px solid var(--ink-dim);
+  background: #061006;
+  padding: 28px 36px;
+  border-radius: 6px;
+  max-width: 420px;
+  box-shadow: 0 0 40px rgba(80, 255, 120, 0.15);
+}
+
+.panel h1 {
+  margin: 0 0 8px;
+  font-size: 36px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-shadow: 0 0 12px rgba(255, 230, 107, 0.5);
+}
+
+.panel p {
+  margin: 8px 0;
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.panel .small {
+  color: var(--ink-dim);
+  font-size: 14px;
+}
+
+.panel .err {
+  color: var(--hot);
+  min-height: 1em;
+}
+
+#startBtn {
+  margin-top: 14px;
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  font-family: inherit;
+  font-size: 20px;
+  letter-spacing: 2px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+#startBtn:hover {
+  background: var(--accent);
+  color: #000;
+  box-shadow: 0 0 24px rgba(255, 230, 107, 0.6);
+}
+
+/* ---------- Bottom status bar ---------- */
+.bottombar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0e140e;
+  border: 1px solid #2a352a;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 16px;
+  flex-wrap: wrap;
+}
+
+.bottombar .stat {
+  display: flex;
+  gap: 6px;
+  color: var(--ink);
+}
+
+.bottombar .lbl {
+  color: var(--ink-dim);
+}
+
+.bottombar .sep {
+  color: #2a352a;
+}
+
+/* ---------- CRT effects ---------- */
+.scanlines {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.18) 3px,
+    rgba(0, 0, 0, 0.18) 3px
+  );
+  mix-blend-mode: multiply;
+}
+
+.vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+@media (max-width: 720px) {
+  .crt { padding: 8px; }
+  .crt-frame { padding: 8px; height: 100%; }
+  .topbar, .bottombar { font-size: 14px; }
+  .controls input[type="range"] { width: 80px; }
+  .controls .hint { display: none; }
+  .panel h1 { font-size: 26px; }
+}
