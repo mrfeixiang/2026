@@ -1,142 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Multilingual Calendar 2026 - Learn English & Chinese with Portuguese Flowers">
-    <meta name="keywords" content="calendar, 2026, multilingual, English, Chinese, Portuguese, flowers, learning">
-    <meta name="author" content="Multilingual Calendar App">
-    
-    <!-- Performance optimizations -->
-    <meta name="theme-color" content="#667eea">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <title>Multilingual Calendar 2026</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Accessibility improvements -->
-    <style>
-        /* Loading state */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(102, 126, 234, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .loading-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Skip to content link for accessibility */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 6px;
-            background: #000;
-            color: #fff;
-            padding: 8px;
-            text-decoration: none;
-            border-radius: 4px;
-            z-index: 10000;
-        }
-        
-        .skip-link:focus {
-            top: 6px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Fire — bend thumb to fire</title>
+<link rel="stylesheet" href="camera-fire.css">
 </head>
 <body>
-    <!-- Loading overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
+  <div class="crt">
+    <div class="crt-frame">
+      <div class="topbar">
+        <div class="url">
+          <span class="proto">://</span>
+          <span class="title" id="title">Camera Fire — bend thumb to fire</span>
+          <span class="caret">_</span>
+        </div>
+        <div class="controls">
+          <label class="ctl"><input type="checkbox" id="funToggle" checked> fun?</label>
+          <label class="ctl">
+            <input type="range" id="sensitivity" min="0" max="100" value="55">
+            <span id="sensVal">55%</span>
+          </label>
+          <span class="hint">[ bend thumb to fire ]</span>
+          <a class="ctl calendar-link" href="calendar.html">calendar →</a>
+        </div>
+      </div>
+
+      <div class="stage">
+        <video id="video" playsinline muted></video>
+        <canvas id="canvas"></canvas>
+        <div id="permission" class="overlay">
+          <div class="panel">
+            <h1>CAMERA FIRE</h1>
+            <p>Make a finger gun at your camera. Bend your thumb to fire.</p>
+            <p class="small">Requires webcam permission. Runs entirely in your browser.</p>
+            <button id="startBtn">START CAMERA</button>
+            <p class="small err" id="errMsg"></p>
+          </div>
+        </div>
+        <div id="hud" class="hud hidden">
+          <div class="muteIcon" id="muteIcon">◔</div>
+        </div>
+      </div>
+
+      <div class="bottombar">
+        <div class="stat"><span class="lbl">READY</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">HAND:</span><span id="handStat">--</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">THUMB:</span><span id="thumbStat">--</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">SHOTS:</span><span id="shotsStat">0</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">HITS:</span><span id="hitsStat">0</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">SCORE:</span><span id="scoreStat">0</span></div>
+      </div>
     </div>
-    
-    <!-- Skip to content link for accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    
-    <div class="container">
-        <header class="header">
-            <h1>Multilingual Calendar 2026</h1>
-            <p class="subtitle">Learn English & Chinese with Portuguese Flowers</p>
-        </header>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+  </div>
 
-        <nav class="calendar-navigation" role="navigation" aria-label="Calendar navigation">
-            <button id="prevMonth" class="nav-btn" aria-label="Previous month">&lt;</button>
-            <div class="month-display">
-                <h2 id="currentMonth" class="month-title-en" aria-live="polite"></h2>
-                <h2 id="currentMonthCh" class="month-title-ch" aria-live="polite"></h2>
-            </div>
-            <button id="nextMonth" class="nav-btn" aria-label="Next month">&gt;</button>
-        </nav>
-
-        <main id="main-content" class="calendar-container">
-            <section class="month-flower" aria-labelledby="flower-heading">
-                <h3 id="flower-heading" class="sr-only">Monthly Flower</h3>
-                <div class="flower-image" id="flowerImage" role="img" aria-label="Monthly flower"></div>
-                <div class="flower-info">
-                    <div class="flower-name-pt" id="flowerNamePt" aria-label="Portuguese name"></div>
-                    <div class="flower-name-en" id="flowerNameEn" aria-label="English name"></div>
-                    <div class="flower-name-ch" id="flowerNameCh" aria-label="Chinese name"></div>
-                </div>
-            </section>
-            
-            <section class="calendar-grid" id="calendarGrid" role="grid" aria-label="Calendar grid">
-                <!-- Calendar will be generated here -->
-            </section>
-        </main>
-
-        <aside class="sidebar" role="complementary" aria-label="Daily learning content">
-            <div class="daily-content" id="dailyContent">
-                <h3>Daily Learning</h3>
-                <div id="dailyQuote" aria-live="polite"></div>
-                <div id="dailyFact" aria-live="polite"></div>
-                <div id="dailyVocabulary" aria-live="polite"></div>
-            </div>
-        </aside>
-    </div>
-
-    <!-- Screen reader only class -->
-    <style>
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-    </style>
-
-    <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="camera-fire.js"></script>
 </body>
 </html>
