@@ -50,10 +50,41 @@
     targets: [],
     flashes: [],
     sparks: [],
+    shards: [],
+    cracks: [],
     lastFrame: performance.now(),
     sensitivity: 0.55,
     fun: true,
   };
+
+  // Offscreen canvas used to grab a mirrored snapshot of the live video, so
+  // that page-shatter shards can carry pieces of the visible scene as they fly.
+  const grabber = document.createElement("canvas");
+  const grabberCtx = grabber.getContext("2d");
+
+  function refreshGrabber() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (!w || !h || !video.videoWidth) return false;
+    if (grabber.width !== w) grabber.width = w;
+    if (grabber.height !== h) grabber.height = h;
+    grabberCtx.save();
+    grabberCtx.clearRect(0, 0, w, h);
+    // Mirror to match the visible (CSS-flipped) video.
+    grabberCtx.translate(w, 0);
+    grabberCtx.scale(-1, 1);
+    // object-fit: cover math.
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    const scale = Math.max(w / vw, h / vh);
+    const dw = vw * scale;
+    const dh = vh * scale;
+    const dx = (w - dw) / 2;
+    const dy = (h - dh) / 2;
+    grabberCtx.drawImage(video, dx, dy, dw, dh);
+    grabberCtx.restore();
+    return true;
+  }
 
   function resizeCanvas() {
     const rect = canvas.getBoundingClientRect();
@@ -142,6 +173,9 @@
           hitsStat.textContent = state.hits;
           scoreStat.textContent = state.score;
           spawnSparks(t.x, t.y, t.hue);
+          spawnShatter(t.x, t.y);
+          spawnCrack(t.x, t.y);
+          shakeFrame();
           break;
         }
       }
@@ -160,6 +194,109 @@
       s.ttl -= dt;
       return s.ttl > 0;
     });
+
+    for (const s of state.shards) {
+      s.x += s.vx * dt;
+      s.y += s.vy * dt;
+      s.vy += 900 * dt; // gravity
+      s.rot += s.vrot * dt;
+      s.ttl -= dt;
+    }
+    state.shards = state.shards.filter(s => s.ttl > 0);
+
+    for (const c of state.cracks) c.ttl -= dt;
+    state.cracks = state.cracks.filter(c => c.ttl > 0);
+  }
+
+  /* ---------- Page shatter ---------- */
+
+  function makeJaggedPoly(size) {
+    const center = size / 2;
+    const sides = 6 + Math.floor(Math.random() * 3);
+    const pts = [];
+    for (let i = 0; i < sides; i++) {
+      const a = (i / sides) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+      const r = (size / 2) * (0.55 + Math.random() * 0.45);
+      pts.push({ x: center + Math.cos(a) * r, y: center + Math.sin(a) * r });
+    }
+    return pts;
+  }
+
+  function spawnShatter(hitX, hitY) {
+    if (!refreshGrabber()) return;
+    const count = 7 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < count; i++) {
+      const size = 36 + Math.random() * 38;
+      // Pick a sub-region of the grabber centered near the hit so each shard
+      // carries a piece of what was actually on screen at that point.
+      const ox = Math.round(hitX - size / 2 + (Math.random() - 0.5) * 30);
+      const oy = Math.round(hitY - size / 2 + (Math.random() - 0.5) * 30);
+
+      const shardCanvas = document.createElement("canvas");
+      shardCanvas.width = size;
+      shardCanvas.height = size;
+      const sctx = shardCanvas.getContext("2d");
+
+      const points = makeJaggedPoly(size);
+      sctx.beginPath();
+      sctx.moveTo(points[0].x, points[0].y);
+      for (let j = 1; j < points.length; j++) sctx.lineTo(points[j].x, points[j].y);
+      sctx.closePath();
+      sctx.save();
+      sctx.clip();
+      // Drawing the grabber at (-ox, -oy) places the (ox, oy) corner at 0,0.
+      sctx.drawImage(grabber, -ox, -oy);
+      sctx.restore();
+      // Glassy edge highlight.
+      sctx.lineWidth = 1.5;
+      sctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+      sctx.stroke();
+      sctx.lineWidth = 0.6;
+      sctx.strokeStyle = "rgba(0, 0, 0, 0.4)";
+      sctx.stroke();
+
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 220 + Math.random() * 360;
+      state.shards.push({
+        img: shardCanvas,
+        size,
+        x: hitX,
+        y: hitY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 160, // initial upward kick
+        rot: 0,
+        vrot: (Math.random() - 0.5) * 9,
+        ttl: 1.7,
+        max: 1.7,
+      });
+    }
+  }
+
+  function spawnCrack(hitX, hitY) {
+    const arms = 5 + Math.floor(Math.random() * 4);
+    const lines = [];
+    for (let i = 0; i < arms; i++) {
+      const a = (i / arms) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
+      lines.push({
+        a,
+        len: 50 + Math.random() * 90,
+        kinkA: a + (Math.random() - 0.5) * 0.9,
+        kinkLen: 20 + Math.random() * 60,
+      });
+    }
+    state.cracks.push({ x: hitX, y: hitY, lines, ttl: 5, max: 5 });
+  }
+
+  let shakeTimer = 0;
+  function shakeFrame() {
+    const frame = document.querySelector(".crt-frame");
+    if (!frame) return;
+    frame.classList.remove("shake");
+    // Force reflow so the animation restarts on rapid hits.
+    void frame.offsetWidth;
+    frame.classList.add("shake");
+    clearTimeout(shakeTimer);
+    shakeTimer = setTimeout(() => frame.classList.remove("shake"), 280);
   }
 
   function spawnSparks(x, y, hue) {
@@ -317,6 +454,48 @@
       ctx.restore();
     }
 
+    // Glass cracks — drawn beneath targets/effects so they read as damage on
+    // the "screen" surface itself.
+    for (const c of state.cracks) {
+      const a = Math.min(1, c.ttl / c.max);
+      ctx.save();
+      ctx.lineCap = "round";
+      // Dark outline so cracks read on bright backgrounds.
+      ctx.strokeStyle = `rgba(0, 0, 0, ${a * 0.55})`;
+      ctx.lineWidth = 3;
+      for (const l of c.lines) {
+        const ex = c.x + Math.cos(l.a) * l.len;
+        const ey = c.y + Math.sin(l.a) * l.len;
+        const kx = ex + Math.cos(l.kinkA) * l.kinkLen;
+        const ky = ey + Math.sin(l.kinkA) * l.kinkLen;
+        ctx.beginPath();
+        ctx.moveTo(c.x, c.y);
+        ctx.lineTo(ex, ey);
+        ctx.lineTo(kx, ky);
+        ctx.stroke();
+      }
+      // White highlight on top.
+      ctx.strokeStyle = `rgba(255, 255, 255, ${a * 0.95})`;
+      ctx.lineWidth = 1.4;
+      for (const l of c.lines) {
+        const ex = c.x + Math.cos(l.a) * l.len;
+        const ey = c.y + Math.sin(l.a) * l.len;
+        const kx = ex + Math.cos(l.kinkA) * l.kinkLen;
+        const ky = ey + Math.sin(l.kinkA) * l.kinkLen;
+        ctx.beginPath();
+        ctx.moveTo(c.x, c.y);
+        ctx.lineTo(ex, ey);
+        ctx.lineTo(kx, ky);
+        ctx.stroke();
+      }
+      // Impact dot.
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${a})`;
+      ctx.fill();
+      ctx.restore();
+    }
+
     // Targets.
     for (const t of state.targets) {
       ctx.save();
@@ -431,6 +610,22 @@
         ctx.lineTo(lm[b].x, lm[b].y);
         ctx.stroke();
       }
+    }
+
+    // Page-shatter shards — drawn last so they tumble in front of everything
+    // (including the hand overlay) like real flying debris.
+    for (const s of state.shards) {
+      ctx.save();
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.rot);
+      const a = Math.max(0, Math.min(1, s.ttl / s.max));
+      ctx.globalAlpha = a;
+      // Drop shadow under the shard.
+      ctx.shadowColor = "rgba(0, 0, 0, 0.55)";
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 4;
+      ctx.drawImage(s.img, -s.size / 2, -s.size / 2);
+      ctx.restore();
     }
   }
 

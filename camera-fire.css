@@ -57,6 +57,19 @@ html, body {
   gap: 8px;
 }
 
+@keyframes crt-shake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  15%      { transform: translate(-4px, 3px) rotate(-0.3deg); }
+  30%      { transform: translate(5px, -2px) rotate(0.4deg); }
+  45%      { transform: translate(-3px, -4px) rotate(-0.2deg); }
+  60%      { transform: translate(4px, 3px) rotate(0.3deg); }
+  80%      { transform: translate(-2px, 2px) rotate(0deg); }
+}
+
+.crt-frame.shake {
+  animation: crt-shake 0.28s ease-out;
+}
+
 /* ---------- Top URL bar ---------- */
 .topbar {
   display: flex;
