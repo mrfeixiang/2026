@@ -1,0 +1,13 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Permissions-Policy", "value": "camera=(self)" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" }
+      ]
+    }
+  ]
+}

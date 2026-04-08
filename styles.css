@@ -53,6 +53,27 @@ body {
     backdrop-filter: blur(10px);
 }
 
+.header-link {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #ff6b35 0%, #ffd23f 100%);
+    color: #1a1a1a;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(255, 107, 53, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.header-link:hover,
+.header-link:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(255, 107, 53, 0.5);
+    outline: none;
+}
+
 .header h1 {
     font-family: 'Playfair Display', serif;
     font-size: 3rem;
