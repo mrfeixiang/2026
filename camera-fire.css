@@ -118,6 +118,20 @@ html, body {
   white-space: nowrap;
 }
 
+.controls .calendar-link {
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.controls .calendar-link:hover {
+  background: var(--accent);
+  color: #000;
+}
+
 /* ---------- Stage ---------- */
 .stage {
   position: relative;
