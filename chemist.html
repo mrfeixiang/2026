@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>药物化学家之眼 · The Medicinal Chemist's Eye</title>
+<meta name="description" content="拍一张药盒或分子结构,像做新药研发的人一样去看它:最有意思的结构在哪、为什么可能有活性、有什么风险、只改一处从哪开始。">
+<meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1418" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="化学家之眼">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cg fill='none' stroke='%23fefdf6' stroke-width='3'%3E%3Cpolygon points='32,16 44,23 44,37 32,44 20,37 20,23'/%3E%3Ccircle cx='32' cy='30' r='6'/%3E%3C/g%3E%3Ccircle cx='45' cy='45' r='9' fill='%23f59e0b'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230f766e'/%3E%3Cg fill='none' stroke='%23fefdf6' stroke-width='3'%3E%3Cpolygon points='32,16 44,23 44,37 32,44 20,37 20,23'/%3E%3Ccircle cx='32' cy='30' r='6'/%3E%3C/g%3E%3Ccircle cx='45' cy='45' r='9' fill='%23f59e0b'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="chemist.css">
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ============ 首页 / 取景 ============ -->
+  <section class="screen screen--home is-active" id="home">
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="40" height="40">
+            <polygon points="20,6 31,12.5 31,25.5 20,32 9,25.5 9,12.5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="20" cy="19" r="5.2" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="29.5" cy="29.5" r="6.5" fill="var(--amber)"/>
+            <circle cx="29.5" cy="29.5" r="2.4" fill="#0b1418"/>
+          </svg>
+        </span>
+        <div class="brand-txt">
+          <h1>药物化学家之眼</h1>
+          <p>The Medicinal Chemist's Eye</p>
+        </div>
+      </div>
+      <p class="pitch">不是「识别这是什么」,而是<em>像做新药的人一样看它</em>——最有意思的结构在哪、为什么可能有活性、有什么风险、只改一处从哪开始。</p>
+    </header>
+
+    <div class="capture">
+      <label class="capture-btn capture-btn--primary">
+        <input type="file" accept="image/*" capture="environment" id="cameraInput" hidden>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+        拍一张药盒 / 分子结构
+      </label>
+      <label class="capture-btn">
+        <input type="file" accept="image/*" id="galleryInput" hidden>
+        从相册选一张
+      </label>
+      <p class="demo-tag">演示模式 · AI 视觉识别尚未接入,先用内置分子体验「化学家视角」</p>
+    </div>
+
+    <div class="examples">
+      <div class="examples-head">
+        <span class="rule"></span><span>或直接试试这些</span><span class="rule"></span>
+      </div>
+      <div class="chips" id="exampleChips"><!-- filled by JS --></div>
+    </div>
+
+    <footer class="home-foot">
+      <p>仅供教育/演示 · 非医疗建议 · 分子结构为示意绘制</p>
+    </footer>
+  </section>
+
+  <!-- ============ 分析中 ============ -->
+  <section class="screen screen--think" id="thinking">
+    <div class="think-inner">
+      <div class="specimen" id="thinkSpecimen"></div>
+      <div class="think-scan"><span></span></div>
+      <ul class="think-steps" id="thinkSteps"></ul>
+    </div>
+  </section>
+
+  <!-- ============ 结果 ============ -->
+  <section class="screen screen--result" id="result">
+    <div class="result-scroll" id="resultScroll">
+      <button class="back-btn" id="backBtn" type="button">‹ 再看一个</button>
+
+      <div class="hero">
+        <div class="hero-struct">
+          <div class="struct-frame" id="structFrame"><!-- SVG injected --></div>
+          <p class="hl-caption" id="hlCaption"></p>
+          <button class="hl-toggle is-on" id="hlToggle" type="button">
+            <span class="dot"></span><span class="lbl">高亮药效团</span>
+          </button>
+        </div>
+        <div class="hero-id">
+          <h2 id="molName"></h2>
+          <p class="mol-en" id="molEn"></p>
+          <div class="mol-chips" id="molChips"></div>
+        </div>
+      </div>
+
+      <div class="cards" id="cards"><!-- cards injected --></div>
+
+      <p class="result-foot">演示内容 · 教育用途 · 非医疗建议</p>
+    </div>
+  </section>
+
+  <!-- ============ 演示模式选择器 ============ -->
+  <div class="picker" id="picker" hidden>
+    <div class="picker-panel">
+      <div class="picker-shot" id="pickerShot"></div>
+      <h3>演示模式</h3>
+      <p>真实视觉识别还没接上。选一个分子,看看化学家会怎么读它 —— 你拍的这张会一并留作「样本」。</p>
+      <div class="picker-list" id="pickerList"></div>
+      <button class="picker-close" id="pickerClose" type="button">取消</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="chemist-data.js"></script>
+<script src="chemist.js"></script>
+</body>
+</html>
