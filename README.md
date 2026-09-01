@@ -7,6 +7,25 @@ A beautiful, interactive calendar application that combines date management with
 
 ## 🚀 [**Live Demo →**](https://mrfeixiang.github.io/2026/)
 
+---
+
+## 🔬 药物化学家之眼 · The Medicinal Chemist's Eye
+
+A mobile web app (PWA) that looks at a molecule **the way a drug-discovery chemist does** — not "what is this?" but "where's the most interesting structure, why might it be active, what are the liabilities, and if you could change one position, where would you start?" For marketed drugs it also tells the discovery story.
+
+**Open it at `/chemist`** (or the `chemist's eye →` link on the home page). On iPhone Safari, use *Share → Add to Home Screen* to run it full-screen like a native app.
+
+- **Highlighted pharmacophore** — the app draws each structure and puts an amber halo exactly where a chemist's eye goes first (aspirin's acetyl, penicillin's β-lactam, the xanthine scaffold, …).
+- **Six-part read** per molecule: 一句话看懂 · 结构亮点 · 为什么可能有活性 · 潜在风险/结构警示 · 只改一个位置 · 发现故事, plus a molecular profile (SMILES / formula / MW / target / origin).
+- **Demo mode** — ships with 6 hand-built molecules (阿司匹林、对乙酰氨基酚、咖啡因、布洛芬、青霉素G、二甲双胍). The camera/gallery capture works; real vision recognition is a planned backend swap.
+- Built as self-contained HTML/CSS/JS so the same prompts and analysis structure can migrate to a native SwiftUI app later.
+
+> Educational / demo use only — not medical advice. Structures are drawn schematically.
+
+Files: [`chemist.html`](chemist.html) · [`chemist.css`](chemist.css) · [`chemist.js`](chemist.js) (structure-rendering engine + app) · [`chemist-data.js`](chemist-data.js) (molecule knowledge base).
+
+---
+
 ## ✨ Features
 
 ### 🗓️ Calendar Functionality

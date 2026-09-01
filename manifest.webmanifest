@@ -1,0 +1,20 @@
+{
+  "name": "药物化学家之眼",
+  "short_name": "化学家之眼",
+  "description": "像做新药研发的人一样看一个分子:结构亮点、为何有活性、潜在风险、只改一处从哪开始。",
+  "start_url": "/chemist",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f3ea",
+  "theme_color": "#0f766e",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230f766e'/%3E%3Cg fill='none' stroke='%23fefdf6' stroke-width='22'%3E%3Cpolygon points='256,120 350,175 350,285 256,340 162,285 162,175'/%3E%3Ccircle cx='256' cy='230' r='44'/%3E%3C/g%3E%3Ccircle cx='360' cy='360' r='74' fill='%23f59e0b'/%3E%3Ccircle cx='360' cy='360' r='26' fill='%230b1418'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
