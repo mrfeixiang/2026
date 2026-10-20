@@ -1,0 +1,6 @@
+cell_id,cell_name,tissue
+101,A549,lung
+102,MCF7,breast
+103,HCT116,colon
+104,PC3,prostate
+105,A375,skin
