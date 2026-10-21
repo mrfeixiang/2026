@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Camera Fire Rhythm — shoot on the beat</title>
+<title>Camera Fire Rhythm — touch on the beat</title>
 <link rel="stylesheet" href="camera-fire.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
       <div class="topbar">
         <div class="url">
           <span class="proto">://</span>
-          <span class="title" id="title">Camera Fire Rhythm — shoot on the beat</span>
+          <span class="title" id="title">Camera Fire Rhythm — touch on the beat</span>
           <span class="caret">_</span>
         </div>
         <div class="controls">
@@ -21,6 +21,7 @@
             <select id="trackSelect" class="track-select">
               <option value="ode">欢乐颂 / Ode to Joy</option>
               <option value="andFire">And Fire (space-rock synth)</option>
+              <option value="viva">Viva (Coldplay-inspired tribute)</option>
             </select>
           </label>
           <label class="ctl">
@@ -28,7 +29,7 @@
             <span id="sensVal">55%</span>
           </label>
           <label class="ctl"><input type="checkbox" id="muteToggle"> mute</label>
-          <span class="hint">[ bend thumb on the beat ]</span>
+          <span class="hint">[ touch notes with fingertips ]</span>
           <a class="ctl calendar-link" href="index.html">classic →</a>
           <a class="ctl calendar-link" href="https://2026-taupe-seven.vercel.app/rhythm" target="_blank" rel="noopener">vercel →</a>
         </div>
@@ -40,8 +41,8 @@
         <div id="permission" class="overlay">
           <div class="panel rhythm-panel">
             <h1>CAMERA FIRE RHYTHM</h1>
-            <p>按音乐节拍消除靶子。手指枪瞄准，弯拇指开火。</p>
-            <p class="small">曲目用浏览器合成播放（贝多芬《欢乐颂》公有领域；And Fire 为致敬风格原创）。</p>
+            <p>用<strong>指尖触摸</strong>节拍上的音符来消除。对准中线，碰到即得分。</p>
+            <p class="small">曲目均为浏览器合成：欢乐颂（公有领域）；And Fire / Viva 为致敬风格原创（非 Coldplay《Viva La Vida》原曲或录音）。</p>
             <div class="track-picks" id="trackPicks">
               <button type="button" class="track-pick active" data-track="ode">
                 <span class="pick-title">欢乐颂</span>
@@ -50,6 +51,10 @@
               <button type="button" class="track-pick" data-track="andFire">
                 <span class="pick-title">And Fire</span>
                 <span class="pick-sub">Hawkwind-flavored · 128 BPM</span>
+              </button>
+              <button type="button" class="track-pick" data-track="viva">
+                <span class="pick-title">Viva</span>
+                <span class="pick-sub">Coldplay-inspired · 138 BPM</span>
               </button>
             </div>
             <button id="startBtn">START CAMERA + MUSIC</button>
@@ -74,6 +79,8 @@
 
       <div class="bottombar">
         <div class="stat"><span class="lbl">TRACK:</span><span id="trackStat">--</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">TOUCH:</span><span id="touchStat">--</span></div>
         <div class="sep">|</div>
         <div class="stat"><span class="lbl">BEAT:</span><span id="beatStat">--</span></div>
         <div class="sep">|</div>
