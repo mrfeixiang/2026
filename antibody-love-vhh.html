@@ -126,6 +126,41 @@
     font-size: 0.8rem;
     animation: rise 1s 0.35s cubic-bezier(.2,.8,.2,1) both;
   }
+  .essay {
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 3vw, 2.5rem);
+    border-top: 1px solid rgba(232,242,236,0.08);
+    max-width: 42rem;
+  }
+  .essay h2 {
+    font-family: Syne, sans-serif;
+    font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.65rem;
+    line-height: 1.15;
+  }
+  .essay .kicker {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.55rem;
+  }
+  .essay p {
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 0.9rem;
+    font-size: 0.95rem;
+  }
+  .essay p:last-child { margin-bottom: 0; }
+  .essay a { color: var(--paper); text-underline-offset: 3px; }
+  .essay a:hover { color: var(--rose); }
+  .essay code {
+    font-size: 0.88em;
+    color: var(--amber);
+    background: rgba(255,122,61,0.1);
+    padding: 0.05em 0.3em;
+  }
   .shirt {
     padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2.5rem) 4rem;
     border-top: 1px solid rgba(232,242,236,0.08);
@@ -194,6 +229,7 @@
       <div class="cta">
         <button class="primary" id="runBtn" type="button">运行动画</button>
         <button id="resetBtn" type="button">清空</button>
+        <a class="link" href="#code">代码 · 公司 · 艺术 ↓</a>
         <a class="link" href="peace-animation/antibody-love-vhh-shirt.sh" download>下载 shirt 脚本</a>
         <a class="link" href="peace-for-all.html">PEACE FOR ALL 原版 →</a>
         <a class="link" href="index.html">← Camera Fire</a>
@@ -203,6 +239,27 @@
       <canvas id="term" width="960" height="540" aria-label="terminal animation"></canvas>
     </div>
     <p class="foot">bash peace-animation/antibody-love-vhh-shirt.sh · Ctrl+C 退出终端版</p>
+  </section>
+
+  <section class="essay" id="code">
+    <span class="kicker">The code</span>
+    <h2>这段代码在做什么</h2>
+    <p>本页是对 Uniqlo × Akamai T 恤彩蛋的致敬重制。结构同原版：<code>eval "$(base64 -d &lt;&lt;&lt; '…')"</code> 把动画脚本锁进 Base64，解码后立刻执行。终端里用正弦波定位字符、256 色渐变描边；浏览器画布复刻同一数学。</p>
+    <p>文案换成 <code>♥ANTIBODY♥LOVE♥VHH♥…</code>，色相改为青绿→玫红。Base64 块里橙色高亮仍按序拼出口号——程序、图形与口号叠在同一层。完整原版说明见 <a href="peace-for-all.html">PEACE FOR ALL</a>。</p>
+  </section>
+
+  <section class="essay" id="company">
+    <span class="kicker">Akamai × Uniqlo</span>
+    <h2>公司与公益项目</h2>
+    <p><a href="https://www.akamai.com/" rel="noopener noreferrer" target="_blank">Akamai</a> 是全球 CDN / 安全云厂商；与 <a href="https://www.uniqlo.com/" rel="noopener noreferrer" target="_blank">UNIQLO</a> 慈善系列 <strong>PEACE FOR ALL</strong> 合作，把可运行的 Linux/Bash 源码印上 T 恤。米色致敬早期「beige box」电脑，正面花括号里的心象征互联网的善意用途。</p>
+    <p>系列利润捐赠 UNHCR、Plan International、Save the Children 等。详见 <a href="https://www.akamai.com/newsroom/press-release/uniqlo-adds-new-akamai-tshirt-to-peace-for-all-collection" rel="noopener noreferrer" target="_blank">Akamai 新闻稿</a> 与本站 <a href="peace-for-all.html#company">原版介绍</a>。</p>
+  </section>
+
+  <section class="essay" id="art">
+    <span class="kicker">Similar art</span>
+    <h2>相近的艺术脉络</h2>
+    <p>可执行源码当服装图案，靠近 <strong>code as fashion</strong>：和 ANSI/ASCII 终端画、demoscene 特效、IOCCC 式「优美的混淆」、以及 net.art / glitch、代码诗同一条线。街上买到的衣服能在终端跑出一句话——零售遇见黑客彩蛋。</p>
+    <p>本页把同一形式转写到「antibody love vhh」：保留 Base64 信封与正弦波动画，换成新的口号与配色，当作一次私人致敬与再创作。</p>
   </section>
 
   <section class="shirt">
