@@ -31,4 +31,7 @@ Press `Ctrl+C` to restore the cursor and exit.
 
 ## Browser version
 
-Open [`../antibody-love-vhh.html`](../antibody-love-vhh.html) — live canvas animation plus a t-shirt-style code block where orange highlights spell **ANTIBODY LOVE VHH**.
+- [`../peace-for-all.html`](../peace-for-all.html) — **原版** Uniqlo × Akamai PEACE FOR ALL
+- [`../antibody-love-vhh.html`](../antibody-love-vhh.html) — remake for antibody love vhh
+
+Live on GitHub Pages: https://mrfeixiang.github.io/2026/peace-for-all.html
