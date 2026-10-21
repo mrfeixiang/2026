@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>antibody love vhh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0b1210;
+    --paper: #e8f2ec;
+    --teal: #1faa8a;
+    --rose: #e25d7a;
+    --amber: #ff7a3d;
+    --muted: #6b7f76;
+    --code: #d7e4dc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    color: var(--paper);
+    background:
+      radial-gradient(1200px 700px at 15% -10%, #1a3d34 0%, transparent 55%),
+      radial-gradient(900px 600px at 110% 20%, #3a1c28 0%, transparent 50%),
+      linear-gradient(165deg, #07110e 0%, #0f1c18 45%, #140e12 100%);
+    min-height: 100vh;
+  }
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.015) 2px,
+        rgba(255,255,255,0.015) 3px
+      );
+    pointer-events: none;
+    animation: scan 12s linear infinite;
+  }
+  @keyframes scan {
+    from { background-position: 0 0; }
+    to { background-position: 0 120px; }
+  }
+  .brand {
+    font-family: Syne, sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.4rem, 8vw, 5.5rem);
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    color: var(--paper);
+    mix-blend-mode: normal;
+    animation: rise 0.9s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .brand em {
+    font-style: normal;
+    color: var(--rose);
+  }
+  .lede {
+    margin-top: 0.85rem;
+    max-width: 36rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    animation: rise 0.9s 0.12s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .cta {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+    animation: rise 0.9s 0.2s cubic-bezier(.2,.8,.2,1) both;
+  }
+  button, .link {
+    font: inherit;
+    border: 1px solid rgba(232,242,236,0.35);
+    background: transparent;
+    color: var(--paper);
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  button:hover, .link:hover {
+    background: rgba(31,170,138,0.18);
+    border-color: var(--teal);
+    transform: translateY(-1px);
+  }
+  button.primary {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #04130f;
+    font-weight: 600;
+  }
+  .stage {
+    position: relative;
+    margin-top: 1.5rem;
+    min-height: 0;
+    display: grid;
+    place-items: stretch;
+    animation: rise 1s 0.28s cubic-bezier(.2,.8,.2,1) both;
+  }
+  #term {
+    width: 100%;
+    height: min(52vh, 520px);
+    background: rgba(4, 12, 10, 0.72);
+    border: 1px solid rgba(232,242,236,0.12);
+    display: block;
+  }
+  .foot {
+    margin-top: 1rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    animation: rise 1s 0.35s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .shirt {
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2.5rem) 4rem;
+    border-top: 1px solid rgba(232,242,236,0.08);
+  }
+  .shirt h2 {
+    font-family: Syne, sans-serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .shirt p {
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    max-width: 40rem;
+    line-height: 1.5;
+  }
+  .code-wrap {
+    background: #f4f7f5;
+    color: #1a1f1c;
+    padding: 1.25rem 1rem 1.5rem;
+    overflow-x: auto;
+    position: relative;
+  }
+  .shebang {
+    display: inline-block;
+    background: #111;
+    color: var(--amber);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.45rem;
+    margin-bottom: 0.75rem;
+  }
+  .eval {
+    color: #333;
+    white-space: pre;
+    font-size: clamp(0.58rem, 1.4vw, 0.78rem);
+    line-height: 1.35;
+  }
+  .eval .line { display: block; }
+  mark.hl {
+    background: var(--amber);
+    color: #111;
+    padding: 0 1px;
+    border-radius: 1px;
+  }
+  .tag {
+    margin-top: 0.85rem;
+    display: inline-block;
+    background: #111;
+    color: var(--amber);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.55rem;
+    font-size: 0.85rem;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+  <section class="hero">
+    <header>
+      <h1 class="brand">antibody<br><em>love</em> vhh</h1>
+      <p class="lede">同款 Uniqlo × Akamai「PEACE FOR ALL」T 恤彩蛋：正弦波终端动画，base64 + eval 包装。</p>
+      <div class="cta">
+        <button class="primary" id="runBtn" type="button">运行动画</button>
+        <button id="resetBtn" type="button">清空</button>
+        <a class="link" href="peace-animation/antibody-love-vhh-shirt.sh" download>下载 shirt 脚本</a>
+        <a class="link" href="peace-for-all.html">PEACE FOR ALL 原版 →</a>
+        <a class="link" href="index.html">← Camera Fire</a>
+      </div>
+    </header>
+    <div class="stage">
+      <canvas id="term" width="960" height="540" aria-label="terminal animation"></canvas>
+    </div>
+    <p class="foot">bash peace-animation/antibody-love-vhh-shirt.sh · Ctrl+C 退出终端版</p>
+  </section>
+
+  <section class="shirt">
+    <h2>T 恤式源码</h2>
+    <p>橙色高亮字母按序拼出 <strong>ANTIBODY LOVE VHH</strong>——和原版 PEACE FOR ALL 一样的隐藏读法。</p>
+    <div class="code-wrap">
+      <div class="shebang">#!/bin/bash</div>
+      <pre class="eval">eval "$(base64 -d &lt;&lt;&lt; '
+<span class="line">IyEvYmluL2Jhc2gKCiMgQ29uZ3JhdHVsYXRpb25zISBZb3UgZm91bmQg</span>
+<span class="line">dGhlIGVhc3RlciBlZ2chIOKdpO+4jwojIOOBiuOCgeOBp+OBqOOBhuOB</span>
+<span class="line">lOOBluOBhOOBvuOBme+8gem<mark class="hl">a</mark>oOOBleOCjOOB<mark class="hl">n</mark>+OC<mark class="hl">t</mark>eODl+ODqeOCpOOC</span>
+<span class="line">uuOCku<mark class="hl">i</mark>mi+O<mark class="hl">B</mark>p<mark class="hl">O</mark>OBkeOBvuOBl+OBn++8geK<mark class="hl">d</mark>pO+4jwoKI<mark class="hl">y</mark>BEZWZpbmUg</span>
+<span class="line">dGh<mark class="hl">l</mark>IHRleHQgdG8gYW5pbWF0ZQp0ZXh0PSLimaVBTlRJQk9EWeKZpUxP</span>
+<span class="line">VkXimaVWSEjimaVBTlRJQk9EWeKZpUxPVkXimaVWSEjimaVBTlRJQk9E</span>
+<span class="line">WeKZpUxPVkXimaVWSEjimaUiCg<mark class="hl">o</mark>jIEdldCB0ZXJtaW5hbCBkaW1lbnNp</span>
+<span class="line">b25zCmN<mark class="hl">v</mark>bHM9JCh0cHV0IGNvbHMpCmxpbmVzPSQodHB1dCBsaW5lcykK</span>
+<span class="line">CiMgQ2FsY3VsYXRlIHRoZSBsZW5ndGggb2YgdGhlIHRl<mark class="hl">e</mark>HQKdG<mark class="hl">V</mark>4dF9s</span>
+<span class="line">ZW5ndGg9J<mark class="hl">H</mark>sjdGV4d<mark class="hl">H</mark>0KCiMgSGlkZSB0aGUgY3Vyc29yCnRwdXQgY2l2</span>
+<span class="line">aXMKCiMgVHJhcCBDVFJMK0MgdG8gc2hvdyB0aGUgY3Vyc29yIGJlZm9y</span>
+<span class="line">ZSBleGl0aW5nCnRyYXAgInRwdXQgY25vcm07IGV4aXQiIFNJR0lOVCBT</span>
+<span class="line">SUdURVJNCgojIFNldCBmcmVxdWVuY3kgc2NhbGluZyBmYWN0b3IKZnJl</span>
+<span class="line">cT0wLjIKCiMgSW5maW5pdGUgbG9vcCBmb3IgY29udGludW91cyBhbmlt</span>
+<span class="line">YXRpb24KZm9yICgoIHQ9MDsgOyB0Kz0xICkpOyBkbwogICAgIyBFeHRy</span>
+<span class="line">YWN0IG9uZSBjaGFyYWN0ZXIgYXQgYSB0aW1lCiAgICBjaGFyPSIke3Rl</span>
+<span class="line">eHQ6dCAlIHRleHRfbGVuZ3RoOjF9IgoKICAgICMgQ2FsY3VsYXRlIHRo</span>
+<span class="line">ZSBhbmdsZSBpbiByYWRpYW5zCiAgICBhbmdsZT0kKGVjaG8gIigkdCkg</span>
+<span class="line">KiAkZnJlcSIgfCBiYyAtbCkKCiAgICAjIENhbGN1bGF0ZSB0aGUgc2lu</span>
+<span class="line">ZSBvZiB0aGUgYW5nbGUKICAgIHNpbmVfdmFsdWU9JChlY2hvICJzKCRh</span>
+<span class="line">bmdsZSkiIHwgYmMgLWwpCgogICAgIyBDYWxjdWxhdGUgeCBwb3NpdGlv</span>
+<span class="line">biB1c2luZyB0aGUgc2luZSB2YWx1ZQogICAgeD0kKGVjaG8gIigkY29s</span>
+<span class="line">cyAvIDIpICsgKCRjb2xzIC8gNCkgKiAkc2luZV92YWx1ZSIgfCBiYyAt</span>
+<span class="line">bCkKICAgIHg9JChwcmludGYgIiUuMGYiICIkeCIpCgogICAgIyBFbnN1</span>
+<span class="line">cmUgeCBpcyB3aXRoaW4gdGVybWluYWwgYm91bmRzCiAgICBpZiAoKCB4</span>
+<span class="line">IDwgMCApKTsgdGhlbiB4PTA7IGZpCiAgICBpZiAoKCB4ID49IGNvbHMg</span>
+<span class="line">KSk7IHRoZW4geD0kKChjb2xzIC0gMSkpOyBmaQoKICAgIHJvdz0kKCh0</span>
+<span class="line">ICUgbGluZXMpKQoKICAgICMgQ29sb3IgZ3JhZGllbnQ6IHRlYWwgKDM2</span>
+<span class="line">KSDihpIgcm9zZSAoMTY4KQogICAgY29sb3Jfc3RhcnQ9MzYKICAgIGNv</span>
+<span class="line">bG9yX2VuZD0xNjgKICAgIGNvbG9yX3JhbmdlPSQoKGNvbG9yX2VuZCAt</span>
+<span class="line">IGNvbG9yX3N0YXJ0KSkKICAgIGNvbG9yPSQoKGNvbG9yX3N0YXJ0ICsg</span>
+<span class="line">KGNvbG9yX3JhbmdlICogdCAvIGxpbmVzKSAlIGNvbG9yX3JhbmdlKSkK</span>
+<span class="line">CiAgICAjIFByaW50IHRoZSBjaGFyYWN0ZXIgd2l0aCAyNTYtY29sb3Ig</span>
+<span class="line">c3VwcG9ydAogICAgZWNobyAtbmUgIlwwMzNbMzg7NTske2NvbG9yfW0i</span>
+<span class="line">JCh0cHV0IGN1cCAkcm93ICR4KSIkY2hhclwwMzNbMG0iCgogICAgc2xl</span>
+<span class="line">ZXAgMC4wMgpkb25lCg==</span>
+')"
+</pre>
+      <div class="tag">ANTIBODY LOVE VHH</div>
+    </div>
+  </section>
+
+<script>
+(() => {
+  const canvas = document.getElementById("term");
+  const ctx = canvas.getContext("2d");
+  const text = "♥ANTIBODY♥LOVE♥VHH♥ANTIBODY♥LOVE♥VHH♥ANTIBODY♥LOVE♥VHH♥";
+  const freq = 0.2;
+  let t = 0;
+  let running = false;
+  let raf = 0;
+  let last = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cssW = canvas.clientWidth;
+    const cssH = canvas.clientHeight;
+    canvas.width = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function colorFor(step, lines) {
+    const start = 36, end = 168;
+    const range = end - start;
+    const c = start + ((range * step / Math.max(lines, 1)) % range);
+    // map 256-color-ish teal→rose into rgb-ish
+    const u = (c - start) / range;
+    const r = Math.round(31 + u * (226 - 31));
+    const g = Math.round(170 + u * (93 - 170));
+    const b = Math.round(138 + u * (122 - 138));
+    return `rgb(${r},${g},${b})`;
+  }
+
+  function clearSoft() {
+    ctx.fillStyle = "rgba(4, 12, 10, 0.08)";
+    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+  }
+
+  function tick(now) {
+    if (!running) return;
+    if (now - last < 20) {
+      raf = requestAnimationFrame(tick);
+      return;
+    }
+    last = now;
+    const cols = 72;
+    const lines = 28;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const cellW = w / cols;
+    const cellH = h / lines;
+
+    clearSoft();
+
+    const char = text[t % text.length];
+    const angle = t * freq;
+    const sine = Math.sin(angle);
+    let x = Math.round((cols / 2) + (cols / 4) * sine);
+    if (x < 0) x = 0;
+    if (x >= cols) x = cols - 1;
+    const row = t % lines;
+
+    ctx.font = `600 ${Math.floor(cellH * 0.85)}px "IBM Plex Mono", monospace`;
+    ctx.fillStyle = colorFor(t, lines);
+    ctx.fillText(char, x * cellW + 4, row * cellH + cellH * 0.8);
+
+    t += 1;
+    raf = requestAnimationFrame(tick);
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    last = 0;
+    raf = requestAnimationFrame(tick);
+  }
+
+  function reset() {
+    running = false;
+    cancelAnimationFrame(raf);
+    t = 0;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    resize();
+    ctx.fillStyle = "rgba(4, 12, 10, 0.92)";
+    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+  }
+
+  window.addEventListener("resize", () => {
+    const was = running;
+    running = false;
+    cancelAnimationFrame(raf);
+    resize();
+    ctx.fillStyle = "rgba(4, 12, 10, 0.92)";
+    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    if (was) start();
+  });
+
+  document.getElementById("runBtn").addEventListener("click", start);
+  document.getElementById("resetBtn").addEventListener("click", reset);
+
+  resize();
+  ctx.fillStyle = "rgba(4, 12, 10, 0.92)";
+  ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+  // auto-start so the page feels alive
+  start();
+})();
+</script>
+</body>
+</html>

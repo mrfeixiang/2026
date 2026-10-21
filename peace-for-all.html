@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEACE FOR ALL — Uniqlo × Akamai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #071018;
+    --paper: #e8f0f7;
+    --cyan: #1a9fff;
+    --orange: #ff7a3d;
+    --muted: #6b7f8f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    color: var(--paper);
+    background:
+      radial-gradient(1100px 700px at 10% -10%, #0a3a5c 0%, transparent 55%),
+      radial-gradient(900px 600px at 110% 10%, #5a2a12 0%, transparent 50%),
+      linear-gradient(165deg, #050b12 0%, #0a1520 50%, #120c08 100%);
+    min-height: 100vh;
+  }
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 3px);
+    pointer-events: none;
+    animation: scan 12s linear infinite;
+  }
+  @keyframes scan { to { background-position: 0 120px; } }
+  .brand {
+    font-family: Syne, sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 7vw, 5rem);
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    animation: rise 0.9s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .brand em { font-style: normal; color: var(--orange); }
+  .lede {
+    margin-top: 0.85rem;
+    max-width: 38rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    animation: rise 0.9s 0.12s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .cta {
+    display: flex; gap: 0.75rem; margin-top: 1.25rem; flex-wrap: wrap;
+    animation: rise 0.9s 0.2s cubic-bezier(.2,.8,.2,1) both;
+  }
+  button, .link {
+    font: inherit; border: 1px solid rgba(232,240,247,0.35);
+    background: transparent; color: var(--paper);
+    padding: 0.65rem 1rem; cursor: pointer; text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  button:hover, .link:hover {
+    background: rgba(26,159,255,0.18); border-color: var(--cyan); transform: translateY(-1px);
+  }
+  button.primary { background: var(--cyan); border-color: var(--cyan); color: #041018; font-weight: 600; }
+  .stage { margin-top: 1.5rem; animation: rise 1s 0.28s cubic-bezier(.2,.8,.2,1) both; }
+  #term {
+    width: 100%; height: min(52vh, 520px);
+    background: rgba(4, 10, 18, 0.72);
+    border: 1px solid rgba(232,240,247,0.12); display: block;
+  }
+  .foot { margin-top: 1rem; color: var(--muted); font-size: 0.8rem;
+    animation: rise 1s 0.35s cubic-bezier(.2,.8,.2,1) both; }
+  .shirt {
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2.5rem) 4rem;
+    border-top: 1px solid rgba(232,240,247,0.08);
+  }
+  .shirt h2 { font-family: Syne, sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .shirt p { color: var(--muted); margin-bottom: 1.25rem; max-width: 40rem; line-height: 1.5; }
+  .code-wrap { background: #f4f7fa; color: #1a1f24; padding: 1.25rem 1rem 1.5rem; overflow-x: auto; }
+  .shebang { display: inline-block; background: #111; color: var(--orange); font-size: 0.75rem; padding: 0.2rem 0.45rem; margin-bottom: 0.75rem; }
+  .eval { color: #333; white-space: pre; font-size: clamp(0.58rem, 1.4vw, 0.78rem); line-height: 1.35; }
+  .eval .line { display: block; }
+  mark.hl { background: var(--orange); color: #111; padding: 0 1px; }
+  .tag { margin-top: 0.85rem; display: inline-block; background: #111; color: var(--orange); font-weight: 600; letter-spacing: 0.08em; padding: 0.35rem 0.55rem; font-size: 0.85rem; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+  <section class="hero">
+    <header>
+      <h1 class="brand">PEACE<br><em>FOR</em> ALL</h1>
+      <p class="lede">Uniqlo × Akamai T 恤原版彩蛋：正弦波终端动画。橙色高亮拼出 PEACE FOR ALL。</p>
+      <div class="cta">
+        <button class="primary" id="runBtn" type="button">运行动画</button>
+        <button id="resetBtn" type="button">清空</button>
+        <a class="link" href="peace-animation/akamai-peace-for-all-shirt.sh" download>下载 shirt 脚本</a>
+        <a class="link" href="antibody-love-vhh.html">antibody love vhh →</a>
+        <a class="link" href="index.html">← Camera Fire</a>
+      </div>
+    </header>
+    <div class="stage">
+      <canvas id="term" width="960" height="540" aria-label="terminal animation"></canvas>
+    </div>
+    <p class="foot">bash peace-animation/akamai-peace-for-all-shirt.sh · Ctrl+C 退出终端版</p>
+  </section>
+
+  <section class="shirt">
+    <h2>T 恤原版源码</h2>
+    <p>同款 <code>eval "$(base64 -d &lt;&lt;&lt; '…')"</code> 包装；橙色字母按序拼出 <strong>PEACE FOR ALL</strong>。</p>
+    <div class="code-wrap">
+      <div class="shebang">#!/bin/bash</div>
+      <pre class="eval">eval "$(base64 -d &lt;&lt;&lt; '
+<span class="line">IyEvYmluL2Jhc2gKCiMgQ29uZ3JhdHVsYXR<mark class="hl">p</mark>b25zISBZb3UgZm91bmQg</span>
+<span class="line">dGhlIGVhc3RlciBlZ2chIOKdpO+4jwojIOOBiuOCg<mark class="hl">e</mark>OBp+OBqOOBhuOB</span>
+<span class="line">lOOBluOBhOOBvuOBme+8gem<mark class="hl">a</mark>oOOBleO<mark class="hl">C</mark>jOOBn+OCt<mark class="hl">e</mark>ODl+ODqeOCpOOC</span>
+<span class="line">uuOCkuimi+OBpOOBkeOBvuOBl+OBn++8geKdpO+4jwoKIyBEZWZpbmUg</span>
+<span class="line">dGhlIHRleHQgdG8gYW5pbW<mark class="hl">F</mark>0ZQp0ZXh0PSLimaVQRUFDReKZpUZPUuKZ</span>
+<span class="line">pUFMT<mark class="hl">O</mark>KZpVBFQUNF4pml<mark class="hl">R</mark>k9S4pmlQUxM4pmlUEVBQ0Xim<mark class="hl">a</mark>VGT1<mark class="hl">L</mark>imaVB</span>
+<span class="line">TEzimaVQRUFDReKZpUZPUuKZpUFMTOKZpVBFQUNF4pm<mark class="hl">l</mark>Rk9S4pmlQUxM</span>
+<span class="line">4pmlIgoKIyBHZXQgdGVybWluYWwgZGltZW5zaW9ucwpjb2xzPSQodHB1</span>
+<span class="line">dCBjb2xzKQpsaW5lcz0kKHRwdXQgbGluZXMpCgojIENhbGN1bGF0ZSB0</span>
+<span class="line">aGUgbGVuZ3RoIG9mIHRoZSB0ZXh0CnRleHRfbGVuZ3RoPSR7I3RleHR9</span>
+<span class="line">CgojIEhpZGUgdGhlIGN1cnNvcgp0cHV0IGNpdmlzCgojIFRyYXAgQ1RS</span>
+<span class="line">TCtDIHRvIHNob3cgdGhlIGN1cnNvciBiZWZvcmUgZXhpdGluZwp0cmFw</span>
+<span class="line">ICJ0cHV0IGNub3JtOyBleGl0IiBTSUdJTlQgU0lHVEVSTQoKIyBTZXQg</span>
+<span class="line">ZnJlcXVlbmN5IHNjYWxpbmcgZmFjdG9yCmZyZXE9MC4yCgojIEluZmlu</span>
+<span class="line">aXRlIGxvb3AgZm9yIGNvbnRpbnVvdXMgYW5pbWF0aW9uCmZvciAoKCB0</span>
+<span class="line">PTA7IDsgdCs9MSApKTsgZG8KICAgICMgRXh0cmFjdCBvbmUgY2hhcmFj</span>
+<span class="line">dGVyIGF0IGEgdGltZQogICAgY2hhcj0iJHt0ZXh0OnQgJSB0ZXh0X2xl</span>
+<span class="line">bmd0aDoxfSIKCiAgICAjIENhbGN1bGF0ZSB0aGUgYW5nbGUgaW4gcmFk</span>
+<span class="line">aWFucwogICAgYW5nbGU9JChlY2hvICIoJHQpICogJGZyZXEiIHwgYmMg</span>
+<span class="line">LWwpCgogICAgIyBDYWxjdWxhdGUgdGhlIHNpbmUgb2YgdGhlIGFuZ2xl</span>
+<span class="line">CiAgICBzaW5lX3ZhbHVlPSQoZWNobyAicygkYW5nbGUpIiB8IGJjIC1s</span>
+<span class="line">KQoKICAgICMgQ2FsY3VsYXRlIHggcG9zaXRpb24gdXNpbmcgdGhlIHNp</span>
+<span class="line">bmUgdmFsdWUKICAgIHg9JChlY2hvICIoJGNvbHMgLyAyKSArICgkY29s</span>
+<span class="line">cyAvIDQpICogJHNpbmVfdmFsdWUiIHwgYmMgLWwpCiAgICB4PSQocHJp</span>
+<span class="line">bnRmICIlLjBmIiAiJHgiKQoKICAgICMgRW5zdXJlIHggaXMgd2l0aGlu</span>
+<span class="line">IHRlcm1pbmFsIGJvdW5kcwogICAgaWYgKCggeCA8IDAgKSk7IHRoZW4g</span>
+<span class="line">eD0wOyBmaQogICAgaWYgKCggeCA+PSBjb2xzICkpOyB0aGVuIHg9JCgo</span>
+<span class="line">Y29scyAtIDEpKTsgZmkKCiAgICByb3c9JCgodCAlIGxpbmVzKSkKCiAg</span>
+<span class="line">ICAjIENhbGN1bGF0ZSBjb2xvciBncmFkaWVudCBiZXR3ZWVuIDEyIChj</span>
+<span class="line">eWFuKSBhbmQgMjA4IChvcmFuZ2UpCiAgICBjb2xvcl9zdGFydD0xMgog</span>
+<span class="line">ICAgY29sb3JfZW5kPTIwOAogICAgY29sb3JfcmFuZ2U9JCgoY29sb3Jf</span>
+<span class="line">ZW5kIC0gY29sb3Jfc3RhcnQpKQogICAgY29sb3I9JCgoY29sb3Jfc3Rh</span>
+<span class="line">cnQgKyAoY29sb3JfcmFuZ2UgKiB0IC8gbGluZXMpICUgY29sb3JfcmFu</span>
+<span class="line">Z2UpKQoKICAgICMgUHJpbnQgdGhlIGNoYXJhY3RlciB3aXRoIDI1Ni1j</span>
+<span class="line">b2xvciBzdXBwb3J0CiAgICBlY2hvIC1uZSAiXDAzM1szODs1OyR7Y29s</span>
+<span class="line">b3J9bSIkKHRwdXQgY3VwICRyb3cgJHgpIiRjaGFyXDAzM1swbSIKCiAg</span>
+<span class="line">ICBzbGVlcCAwLjAyCmRvbmUK</span>
+')"
+</pre>
+      <div class="tag">PEACE FOR ALL</div>
+    </div>
+  </section>
+
+<script>
+(() => {
+  const canvas = document.getElementById("term");
+  const ctx = canvas.getContext("2d");
+  const text = "♥PEACE♥FOR♥ALL♥PEACE♥FOR♥ALL♥PEACE♥FOR♥ALL♥PEACE♥FOR♥ALL♥PEACE♥FOR♥ALL♥";
+  const freq = 0.2;
+  let t = 0, running = false, raf = 0, last = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(canvas.clientWidth * dpr);
+    canvas.height = Math.floor(canvas.clientHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function colorFor(step, lines) {
+    const start = 12, end = 208, range = end - start;
+    const u = ((range * step / Math.max(lines, 1)) % range) / range;
+    // cyan → orange
+    const r = Math.round(26 + u * (255 - 26));
+    const g = Math.round(159 + u * (122 - 159));
+    const b = Math.round(255 + u * (61 - 255));
+    return `rgb(${r},${g},${b})`;
+  }
+  function clearSoft() {
+    ctx.fillStyle = "rgba(4, 10, 18, 0.08)";
+    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+  }
+  function tick(now) {
+    if (!running) return;
+    if (now - last < 20) { raf = requestAnimationFrame(tick); return; }
+    last = now;
+    const cols = 72, lines = 28;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    const cellW = w / cols, cellH = h / lines;
+    clearSoft();
+    const char = text[t % text.length];
+    let x = Math.round((cols / 2) + (cols / 4) * Math.sin(t * freq));
+    x = Math.max(0, Math.min(cols - 1, x));
+    const row = t % lines;
+    ctx.font = `600 ${Math.floor(cellH * 0.85)}px "IBM Plex Mono", monospace`;
+    ctx.fillStyle = colorFor(t, lines);
+    ctx.fillText(char, x * cellW + 4, row * cellH + cellH * 0.8);
+    t += 1;
+    raf = requestAnimationFrame(tick);
+  }
+  function start() {
+    if (running) return;
+    running = true; last = 0; raf = requestAnimationFrame(tick);
+  }
+  function reset() {
+    running = false; cancelAnimationFrame(raf); t = 0;
+    ctx.setTransform(1,0,0,1,0,0); resize();
+    ctx.fillStyle = "rgba(4, 10, 18, 0.92)";
+    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+  }
+  window.addEventListener("resize", () => {
+    const was = running; running = false; cancelAnimationFrame(raf);
+    resize();
+    ctx.fillStyle = "rgba(4, 10, 18, 0.92)";
+    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    if (was) start();
+  });
+  document.getElementById("runBtn").addEventListener("click", start);
+  document.getElementById("resetBtn").addEventListener("click", reset);
+  resize();
+  ctx.fillStyle = "rgba(4, 10, 18, 0.92)";
+  ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+  start();
+})();
+</script>
+</body>
+</html>
