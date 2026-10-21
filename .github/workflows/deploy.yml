@@ -1,6 +1,8 @@
 name: Deploy to GitHub Pages
 
 on:
+  # Deploy only from main. PR refs cannot use the github-pages environment
+  # (branch protection), which made this workflow fail on every pull_request.
   push:
     branches: [ main ]
 
