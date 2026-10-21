@@ -81,6 +81,41 @@
   }
   .foot { margin-top: 1rem; color: var(--muted); font-size: 0.8rem;
     animation: rise 1s 0.35s cubic-bezier(.2,.8,.2,1) both; }
+  .essay {
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 3vw, 2.5rem);
+    border-top: 1px solid rgba(232,240,247,0.08);
+    max-width: 42rem;
+  }
+  .essay h2 {
+    font-family: Syne, sans-serif;
+    font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.65rem;
+    line-height: 1.15;
+  }
+  .essay .kicker {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 0.55rem;
+  }
+  .essay p {
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 0.9rem;
+    font-size: 0.95rem;
+  }
+  .essay p:last-child { margin-bottom: 0; }
+  .essay a { color: var(--paper); text-underline-offset: 3px; }
+  .essay a:hover { color: var(--orange); }
+  .essay code {
+    font-size: 0.88em;
+    color: var(--orange);
+    background: rgba(255,122,61,0.1);
+    padding: 0.05em 0.3em;
+  }
   .shirt {
     padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2.5rem) 4rem;
     border-top: 1px solid rgba(232,240,247,0.08);
@@ -107,6 +142,7 @@
       <div class="cta">
         <button class="primary" id="runBtn" type="button">运行动画</button>
         <button id="resetBtn" type="button">清空</button>
+        <a class="link" href="#code">代码 · 公司 · 艺术 ↓</a>
         <a class="link" href="peace-animation/akamai-peace-for-all-shirt.sh" download>下载 shirt 脚本</a>
         <a class="link" href="antibody-love-vhh.html">antibody love vhh →</a>
         <a class="link" href="index.html">← Camera Fire</a>
@@ -116,6 +152,27 @@
       <canvas id="term" width="960" height="540" aria-label="terminal animation"></canvas>
     </div>
     <p class="foot">bash peace-animation/akamai-peace-for-all-shirt.sh · Ctrl+C 退出终端版</p>
+  </section>
+
+  <section class="essay" id="code">
+    <span class="kicker">The code</span>
+    <h2>这段代码在做什么</h2>
+    <p>T 恤背面是一段可运行的 Bash：<code>eval "$(base64 -d &lt;&lt;&lt; '…')"</code>。外层把 payload 编成 Base64（像把剧本锁进信封），解码后立刻执行——这是运维里常见的打包手法，也是黑客文化里「一眼看不透、一跑就明白」的彩蛋写法。</p>
+    <p>解码后的脚本用 <code>tput</code> 读终端宽高、隐藏光标；用 <code>bc</code> 算正弦，让字符沿波浪横向摆动；再用 256 色 ANSI 从青（12）渐变到橙（208），无限循环画出 <code>♥PEACE♥FOR♥ALL♥…</code>。Ctrl+C 会恢复光标后干净退出。橙色高亮字母按阅读顺序拼出口号本身——代码既是程序，也是可读的图形设计。</p>
+  </section>
+
+  <section class="essay" id="company">
+    <span class="kicker">Akamai × Uniqlo</span>
+    <h2>公司与公益项目</h2>
+    <p><a href="https://www.akamai.com/" rel="noopener noreferrer" target="_blank">Akamai Technologies</a> 是总部位于美国马萨诸塞州剑桥的网络安全与云公司，二十多年前以 CDN 加速奠定了今日互联网的基础设施。2025 年，它再次与 <a href="https://www.uniqlo.com/" rel="noopener noreferrer" target="_blank">UNIQLO</a> 合作，把设计放进慈善系列 <strong>PEACE FOR ALL</strong>。</p>
+    <p>据 <a href="https://www.akamai.com/newsroom/press-release/uniqlo-adds-new-akamai-tshirt-to-peace-for-all-collection" rel="noopener noreferrer" target="_blank">Akamai 新闻稿</a>：米色呼应早期电脑的「beige box」机箱；正面花括号里的心象征互联网被用于善意；背面是真实可跑的 Linux/Bash 代码——开源语言把工程师、品牌与用户连在同一愿景里。PEACE FOR ALL 自 2022 年启动，利润捐赠 UNHCR、Plan International、Save the Children 等机构；截至 2025 年 1 月已售出逾 660 万件、募得超过 1280 万美元。</p>
+  </section>
+
+  <section class="essay" id="art">
+    <span class="kicker">Similar art</span>
+    <h2>相近的艺术脉络</h2>
+    <p>把可执行源码印上服装，属于「code as fashion / wearable source」：程序不是说明书附图，而是视觉主体。它和 BBS 时代的 <strong>ANSI / ASCII art</strong>、欧洲 <strong>demoscene</strong> 的终端特效、以及 <strong>IOCCC</strong>（混乱 C 代码大赛）里「故意难读却优美」的美学同一谱系——混淆不是为了恶意，而是为了惊奇。</p>
+    <p>再往外，可以连到 net.art 与 glitch 美学（如 Jodi 把浏览器界面拆成材质）、代码诗（code poetry）、以及 GitHub / 开发者大会周边上常见的「把仓库印在胸口」。Akamai 这件 Tee 的特别之处在于：街上随手买到的衣服，真的能在终端里跑出一句和平口号——零售货架遇见了黑客彩蛋。</p>
   </section>
 
   <section class="shirt">
