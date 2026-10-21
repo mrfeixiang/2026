@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Fire Rhythm — shoot on the beat</title>
+<link rel="stylesheet" href="camera-fire.css">
+</head>
+<body>
+  <div class="crt">
+    <div class="crt-frame">
+      <div class="topbar">
+        <div class="url">
+          <span class="proto">://</span>
+          <span class="title" id="title">Camera Fire Rhythm — shoot on the beat</span>
+          <span class="caret">_</span>
+        </div>
+        <div class="controls">
+          <label class="ctl">
+            <span>TRACK</span>
+            <select id="trackSelect" class="track-select">
+              <option value="ode">欢乐颂 / Ode to Joy</option>
+              <option value="andFire">And Fire (space-rock synth)</option>
+            </select>
+          </label>
+          <label class="ctl">
+            <input type="range" id="sensitivity" min="0" max="100" value="55">
+            <span id="sensVal">55%</span>
+          </label>
+          <label class="ctl"><input type="checkbox" id="muteToggle"> mute</label>
+          <span class="hint">[ bend thumb on the beat ]</span>
+          <a class="ctl calendar-link" href="index.html">classic →</a>
+        </div>
+      </div>
+
+      <div class="stage">
+        <video id="video" playsinline muted></video>
+        <canvas id="canvas"></canvas>
+        <div id="permission" class="overlay">
+          <div class="panel rhythm-panel">
+            <h1>CAMERA FIRE RHYTHM</h1>
+            <p>按音乐节拍消除靶子。手指枪瞄准，弯拇指开火。</p>
+            <p class="small">曲目用浏览器合成播放（贝多芬《欢乐颂》公有领域；And Fire 为致敬风格原创）。</p>
+            <div class="track-picks" id="trackPicks">
+              <button type="button" class="track-pick active" data-track="ode">
+                <span class="pick-title">欢乐颂</span>
+                <span class="pick-sub">Ode to Joy · 96 BPM</span>
+              </button>
+              <button type="button" class="track-pick" data-track="andFire">
+                <span class="pick-title">And Fire</span>
+                <span class="pick-sub">Hawkwind-flavored · 128 BPM</span>
+              </button>
+            </div>
+            <button id="startBtn">START CAMERA + MUSIC</button>
+            <p class="small err" id="errMsg"></p>
+          </div>
+        </div>
+        <div id="hud" class="hud hidden">
+          <div class="beat-ring" id="beatRing"></div>
+          <div class="judge" id="judge"></div>
+          <div class="combo-banner" id="comboBanner"></div>
+        </div>
+        <div id="result" class="overlay hidden">
+          <div class="panel">
+            <h1>SET COMPLETE</h1>
+            <p id="resultText"></p>
+            <button id="replayBtn">PLAY AGAIN</button>
+            <p class="small"><a class="inline-link" href="index.html">← back to classic mode</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottombar">
+        <div class="stat"><span class="lbl">TRACK:</span><span id="trackStat">--</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">BEAT:</span><span id="beatStat">--</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">COMBO:</span><span id="comboStat">0</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">PERFECT:</span><span id="perfectStat">0</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">GOOD:</span><span id="goodStat">0</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">MISS:</span><span id="missStat">0</span></div>
+        <div class="sep">|</div>
+        <div class="stat"><span class="lbl">SCORE:</span><span id="scoreStat">0</span></div>
+      </div>
+    </div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="camera-fire-rhythm.js"></script>
+</body>
+</html>
