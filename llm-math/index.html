@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大模型數學工坊 — 從線性代數到 DeepSeek</title>
+  <meta name="description" content="互動式網站：以向量、矩陣、微積分與概率視角理解 BERT、GPT、Stable Diffusion 與 DeepSeek。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <div class="grid-fade"></div>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+  </div>
+
+  <header class="site-header">
+    <a class="brand-mark" href="#top" data-nav="home">大模型數學工坊</a>
+    <nav class="top-nav" aria-label="主導航">
+      <button type="button" data-nav="toc">目錄</button>
+      <button type="button" data-nav="labs">互動實驗</button>
+      <button type="button" data-nav="models">模型視角</button>
+      <button type="button" data-nav="about">關於</button>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="開啟選單" id="menuToggle">☰</button>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="view-home">
+      <div class="hero-copy">
+        <p class="brand-hero">大模型數學工坊</p>
+        <h1>用數學看見<br />語言模型如何思考</h1>
+        <p class="lede">從向量空間到注意力矩陣，從梯度下降到擴散過程——以可操作的實驗理解 BERT、GPT、Stable Diffusion 與 DeepSeek 背後的原理。</p>
+        <div class="cta-row">
+          <button type="button" class="btn primary" data-nav="toc">開始閱讀目錄</button>
+          <button type="button" class="btn ghost" data-nav="labs">打開互動實驗</button>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <canvas id="heroCanvas" width="720" height="520"></canvas>
+        <p class="hero-caption">即時：查詢向量 × 鍵矩陣 → Softmax 注意力權重</p>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="view-about">
+      <div class="panel-inner narrow">
+        <p class="eyebrow">講師</p>
+        <h2>江南燕</h2>
+        <p>計算機碩士，在人工智能領域擁有十年實戰經驗，深耕深度學習、大模型等方向。目前專注于提供人工智能相關培訓與諮詢服務，並持續緊跟技術發展前沿。</p>
+        <p class="note">本站依其課程大綱重構為互動學習介面，強調「動手調參 → 看見數學」而非純文字閱讀。</p>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="view-toc">
+      <div class="panel-inner">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">全書地圖</p>
+            <h2>目錄</h2>
+          </div>
+          <label class="search-wrap">
+            <span class="sr-only">搜尋章節</span>
+            <input type="search" id="tocSearch" placeholder="搜尋章節、模型或概念…" />
+          </label>
+        </div>
+        <div class="toc-grid" id="tocGrid"></div>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="view-chapter">
+      <div class="panel-inner">
+        <button type="button" class="back-link" data-nav="toc">← 返回目錄</button>
+        <article id="chapterArticle"></article>
+        <div class="chapter-nav">
+          <button type="button" id="prevChapter" class="btn ghost">上一節</button>
+          <button type="button" id="nextChapter" class="btn primary">下一節</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="view-labs">
+      <div class="panel-inner">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">動手理解</p>
+            <h2>互動實驗</h2>
+          </div>
+          <div class="lab-tabs" role="tablist" id="labTabs"></div>
+        </div>
+        <div id="labStage" class="lab-stage"></div>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="view-models">
+      <div class="panel-inner">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">模型視角</p>
+            <h2>數學如何驅動四大模型</h2>
+          </div>
+        </div>
+        <div class="model-grid" id="modelGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>大模型數學工坊 · 互動學習原型</p>
+    <a href="../index.html">← 返回首頁</a>
+  </footer>
+
+  <script src="content.js"></script>
+  <script src="labs.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
