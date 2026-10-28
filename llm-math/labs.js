@@ -3,6 +3,10 @@
     current: null,
     raf: null,
 
+    labText() {
+      return window.LLM_MATH_I18N.getLabs();
+    },
+
     mount(root, labId) {
       if (this.raf) cancelAnimationFrame(this.raf);
       this.current = labId;
@@ -60,14 +64,11 @@
     },
 
     overview(root) {
-      const ui = this.shell(
-        root,
-        "三門數學如何匯流",
-        "拖動權重，看線性變換、損失梯度與輸出概率如何同時變化。"
-      );
-      const w = this.slider(ui.controls, { id: "ov-w", label: "線性權重 w", min: -2, max: 2, step: 0.05, value: 1.2 });
-      const b = this.slider(ui.controls, { id: "ov-b", label: "偏置 b", min: -2, max: 2, step: 0.05, value: 0.1 });
-      const temp = this.slider(ui.controls, { id: "ov-t", label: "Softmax 溫度", min: 0.3, max: 2.5, step: 0.05, value: 1 });
+      const t = this.labText().overview;
+      const ui = this.shell(root, t.title, t.desc);
+      const w = this.slider(ui.controls, { id: "ov-w", label: t.w, min: -2, max: 2, step: 0.05, value: 1.2 });
+      const b = this.slider(ui.controls, { id: "ov-b", label: t.b, min: -2, max: 2, step: 0.05, value: 0.1 });
+      const temp = this.slider(ui.controls, { id: "ov-t", label: t.temp, min: 0.3, max: 2.5, step: 0.05, value: 1 });
       const ctx = ui.canvas.getContext("2d");
       const xs = [-1.5, -0.5, 0.4, 1.2];
 
@@ -114,12 +115,12 @@
         });
 
         ctx.fillStyle = "#9bb5a8";
-        ctx.fillText("輸出概率 P(class | x)  · 金色為目標類", 50, 36);
+        ctx.fillText(t.chart, 50, 36);
         this.setStats(ui.stats, [
-          ["交叉熵損失", loss.toFixed(3)],
-          ["∂L/∂logit₀", grad[0].toFixed(3)],
-          ["線性式", `y = ${ww.toFixed(2)}x + ${bb.toFixed(2)}`],
-          ["目標類概率", probs[target].toFixed(3)]
+          [t.loss, loss.toFixed(3)],
+          [t.grad0, grad[0].toFixed(3)],
+          [t.linear, `y = ${ww.toFixed(2)}x + ${bb.toFixed(2)}`],
+          [t.targetP, probs[target].toFixed(3)]
         ]);
       };
 
@@ -132,12 +133,9 @@
     },
 
     vectors(root) {
-      const ui = this.shell(
-        root,
-        "向量與內積",
-        "拖動兩向量角度與長度，觀察點積與餘弦相似度——注意力分數的原型。"
-      );
-      const ang = this.slider(ui.controls, { id: "v-ang", label: "夾角 (°)", min: 0, max: 180, step: 1, value: 35 });
+      const t = this.labText().vectors;
+      const ui = this.shell(root, t.title, t.desc);
+      const ang = this.slider(ui.controls, { id: "v-ang", label: t.ang, min: 0, max: 180, step: 1, value: 35 });
       const lenA = this.slider(ui.controls, { id: "v-a", label: "|a|", min: 0.4, max: 2, step: 0.05, value: 1.4 });
       const lenB = this.slider(ui.controls, { id: "v-b", label: "|b|", min: 0.4, max: 2, step: 0.05, value: 1.1 });
       const ctx = ui.canvas.getContext("2d");
@@ -197,7 +195,7 @@
         this.setStats(ui.stats, [
           ["a · b", dot.toFixed(3)],
           ["cos θ", cos.toFixed(3)],
-          ["解釋", cos > 0.7 ? "高度對齊" : cos > 0.2 ? "部分相關" : "近乎正交／反向"]
+          ["—", cos > 0.7 ? t.interpretHi : cos > 0.2 ? t.interpretMid : t.interpretLo]
         ]);
       };
 
@@ -206,11 +204,8 @@
     },
 
     matrix(root) {
-      const ui = this.shell(
-        root,
-        "矩陣作為線性變換",
-        "調整 2×2 矩陣，看單位方塊被拉伸、旋轉——線性層在做的事。"
-      );
+      const t = this.labText().matrix;
+      const ui = this.shell(root, t.title, t.desc);
       const a11 = this.slider(ui.controls, { id: "m11", label: "a₁₁", min: -1.5, max: 1.5, step: 0.05, value: 1.1 });
       const a12 = this.slider(ui.controls, { id: "m12", label: "a₁₂", min: -1.5, max: 1.5, step: 0.05, value: 0.35 });
       const a21 = this.slider(ui.controls, { id: "m21", label: "a₂₁", min: -1.5, max: 1.5, step: 0.05, value: -0.2 });
@@ -289,9 +284,9 @@
         arrow(e2[0], e2[1], "#e07a5f", "Ae₂");
 
         this.setStats(ui.stats, [
-          ["det(A)", det.toFixed(3)],
-          ["體積縮放", Math.abs(det).toFixed(3)],
-          ["直觀", Math.abs(det) < 0.15 ? "近奇異／信息坍縮" : det < 0 ? "含反射" : "保向變換"]
+          [t.det, det.toFixed(3)],
+          [t.volume, Math.abs(det).toFixed(3)],
+          ["—", Math.abs(det) < 0.15 ? t.singular : det < 0 ? t.reflect : t.preserve]
         ]);
       };
 
@@ -300,14 +295,11 @@
     },
 
     attention(root) {
-      const ui = this.shell(
-        root,
-        "注意力矩陣",
-        "三個 token 的查詢／鍵相似度經 Softmax 變成權重，再混合 value。"
-      );
-      const focus = this.slider(ui.controls, { id: "at-f", label: "Q₂ 對齊強度", min: -2, max: 3, step: 0.05, value: 1.5 });
-      const scale = this.slider(ui.controls, { id: "at-s", label: "√d 縮放", min: 0.5, max: 3, step: 0.05, value: 1.4 });
-      const causal = this.slider(ui.controls, { id: "at-c", label: "因果遮罩 (0 關 / 1 開)", min: 0, max: 1, step: 1, value: 0 });
+      const t = this.labText().attention;
+      const ui = this.shell(root, t.title, t.desc);
+      const focus = this.slider(ui.controls, { id: "at-f", label: t.focus, min: -2, max: 3, step: 0.05, value: 1.5 });
+      const scale = this.slider(ui.controls, { id: "at-s", label: t.scale, min: 0.5, max: 3, step: 0.05, value: 1.4 });
+      const causal = this.slider(ui.controls, { id: "at-c", label: t.causal, min: 0, max: 1, step: 1, value: 0 });
       const ctx = ui.canvas.getContext("2d");
       const labels = ["Tok₁", "Tok₂", "Tok₃"];
 
@@ -342,8 +334,8 @@
         const ox = 120;
         const oy = 80;
         ctx.fillStyle = "#9bb5a8";
-        ctx.font = "13px Noto Sans TC";
-        ctx.fillText("注意力權重 softmax(QKᵀ / √d)", 40, 40);
+        ctx.font = "13px Noto Sans TC, Noto Sans KR, sans-serif";
+        ctx.fillText(t.chart, 40, 40);
 
         for (let i = 0; i < 3; i++) {
           ctx.fillText(labels[i], 50, oy + i * cell + 38);
@@ -373,12 +365,12 @@
         }
         ctx.fillStyle = "#d4a35c";
         ctx.font = "13px JetBrains Mono";
-        ctx.fillText(`Tok₂ 輸出 ≈ [${out[0].toFixed(2)}, ${out[1].toFixed(2)}]`, 40, H - 36);
+        ctx.fillText(`${t.out} [${out[0].toFixed(2)}, ${out[1].toFixed(2)}]`, 40, H - 36);
 
         this.setStats(ui.stats, [
-          ["模式", +causal.value ? "GPT 因果" : "BERT 雙向"],
+          [t.mode, +causal.value ? t.modeGpt : t.modeBert],
           ["Tok₂→Tok₂", weights[1][1].toFixed(3)],
-          ["熵 (Tok₂ 行)", (-weights[1].reduce((a, p) => a + (p > 0 ? p * Math.log(p) : 0), 0)).toFixed(3)]
+          [t.entropy, (-weights[1].reduce((a, p) => a + (p > 0 ? p * Math.log(p) : 0), 0)).toFixed(3)]
         ]);
       };
 
@@ -387,17 +379,14 @@
     },
 
     gradient(root) {
-      const ui = this.shell(
-        root,
-        "梯度下降",
-        "在損失曲面 L(θ)= (θ²-1)² + 0.1θ 上行走。學習率決定你是滑向谷底還是震盪飛出。"
-      );
-      const lr = this.slider(ui.controls, { id: "g-lr", label: "學習率", min: 0.01, max: 0.45, step: 0.01, value: 0.08 });
-      const start = this.slider(ui.controls, { id: "g-s", label: "起始 θ", min: -2, max: 2, step: 0.05, value: -1.6 });
+      const t = this.labText().gradient;
+      const ui = this.shell(root, t.title, t.desc);
+      const lr = this.slider(ui.controls, { id: "g-lr", label: t.lr, min: 0.01, max: 0.45, step: 0.01, value: 0.08 });
+      const start = this.slider(ui.controls, { id: "g-s", label: t.start, min: -2, max: 2, step: 0.05, value: -1.6 });
       const btn = document.createElement("button");
       btn.className = "btn primary";
       btn.type = "button";
-      btn.textContent = "執行一步 / 重置軌跡";
+      btn.textContent = t.step;
       ui.controls.appendChild(btn);
 
       const ctx = ui.canvas.getContext("2d");
@@ -461,13 +450,13 @@
         ctx.stroke();
         ctx.fillStyle = "#9bb5a8";
         ctx.font = "12px JetBrains Mono";
-        ctx.fillText("∇L 方向", mapX(theta) + 10, mapY(L(theta)) - 12);
+        ctx.fillText(t.dir, mapX(theta) + 10, mapY(L(theta)) - 12);
 
         this.setStats(ui.stats, [
           ["θ", theta.toFixed(3)],
           ["L(θ)", L(theta).toFixed(3)],
           ["∇L", g.toFixed(3)],
-          ["步數", String(path.length - 1)]
+          [t.steps, String(path.length - 1)]
         ]);
       };
 
@@ -491,15 +480,12 @@
     },
 
     probability(root) {
-      const ui = this.shell(
-        root,
-        "溫度與採樣分佈",
-        "語言模型 logits 經溫度縮放後 Softmax。溫度越低越「自信」，越高越平滑。"
-      );
-      const temp = this.slider(ui.controls, { id: "p-t", label: "溫度 T", min: 0.2, max: 2.5, step: 0.05, value: 0.9 });
-      const peak = this.slider(ui.controls, { id: "p-p", label: "主詞 logit", min: 0, max: 6, step: 0.1, value: 3.2 });
+      const t = this.labText().probability;
+      const ui = this.shell(root, t.title, t.desc);
+      const temp = this.slider(ui.controls, { id: "p-t", label: t.temp, min: 0.2, max: 2.5, step: 0.05, value: 0.9 });
+      const peak = this.slider(ui.controls, { id: "p-p", label: t.peak, min: 0, max: 6, step: 0.1, value: 3.2 });
       const ctx = ui.canvas.getContext("2d");
-      const names = ["的", "是", "在", "了", "與", "模型", "數學"];
+      const names = t.tokens;
 
       const draw = () => {
         const W = ui.canvas.width;
@@ -523,7 +509,7 @@
           ctx.fillStyle = i === 5 ? "#d4a35c" : "#5ec4a0";
           ctx.fillRect(x, H - 50 - h, barW, h);
           ctx.fillStyle = "#e7f3ec";
-          ctx.font = "13px Noto Sans TC";
+          ctx.font = "13px Noto Sans TC, Noto Sans KR, sans-serif";
           ctx.fillText(names[i], x + 8, H - 24);
           ctx.font = "12px JetBrains Mono";
           ctx.fillText(prob.toFixed(2), x + 8, H - 58 - h);
@@ -531,12 +517,12 @@
 
         ctx.fillStyle = "#9bb5a8";
         ctx.font = "13px JetBrains Mono";
-        ctx.fillText("下一 token 概率質量函數", 40, 36);
+        ctx.fillText(t.chart, 40, 36);
 
         this.setStats(ui.stats, [
-          ["熵 H", entropy.toFixed(3)],
+          [t.entropy, entropy.toFixed(3)],
           ["argmax", names[p.indexOf(Math.max(...p))]],
-          ["P(模型)", p[5].toFixed(3)]
+          [`P(${names[5]})`, p[5].toFixed(3)]
         ]);
       };
 
@@ -545,13 +531,10 @@
     },
 
     diffusion(root) {
-      const ui = this.shell(
-        root,
-        "擴散加噪軌跡",
-        "x_t = √ᾱ_t x₀ + √(1-ᾱ_t) ε。拖動時間步，看信號如何被高斯噪聲線性混合。"
-      );
-      const t = this.slider(ui.controls, { id: "d-t", label: "時間步 t", min: 0, max: 100, step: 1, value: 35 });
-      const noise = this.slider(ui.controls, { id: "d-n", label: "噪聲種子", min: 1, max: 40, step: 1, value: 7 });
+      const copy = this.labText().diffusion;
+      const ui = this.shell(root, copy.title, copy.desc);
+      const t = this.slider(ui.controls, { id: "d-t", label: copy.t, min: 0, max: 100, step: 1, value: 35 });
+      const noise = this.slider(ui.controls, { id: "d-n", label: copy.seed, min: 1, max: 40, step: 1, value: 7 });
       const ctx = ui.canvas.getContext("2d");
 
       const seeded = (n) => {
@@ -598,8 +581,8 @@
           ctx.fillText(label, 48, H / 2 + yOff - 78);
         };
 
-        plot(x0, "rgba(155,181,168,0.55)", "x₀ 原始信號", -70);
-        plot(xt, "#5ec4a0", "x_t 加噪結果", 70);
+        plot(x0, "rgba(155,181,168,0.55)", copy.x0, -70);
+        plot(xt, "#5ec4a0", copy.xt, 70);
 
         ctx.fillStyle = "#d4a35c";
         ctx.font = "13px JetBrains Mono";
@@ -607,8 +590,8 @@
 
         this.setStats(ui.stats, [
           ["ᾱ_t", alphaBar.toFixed(3)],
-          ["信號占比", `${(signal * 100).toFixed(1)}%`],
-          ["噪聲占比", `${(noiseScale * 100).toFixed(1)}%`]
+          [copy.signal, `${(signal * 100).toFixed(1)}%`],
+          [copy.noise, `${(noiseScale * 100).toFixed(1)}%`]
         ]);
       };
 
@@ -619,9 +602,10 @@
     startHero(canvas) {
       const ctx = canvas.getContext("2d");
       let tick = 0;
-      const tokens = ["詞", "嵌", "入", "注", "意"];
       const loop = () => {
         tick += 0.016;
+        const hero = this.labText().hero;
+        const tokens = hero.tokens;
         const W = canvas.width;
         const H = canvas.height;
         ctx.clearRect(0, 0, W, H);
@@ -647,8 +631,8 @@
         const oy = 90;
         const cell = 78;
         ctx.fillStyle = "#9bb5a8";
-        ctx.font = "14px Noto Sans TC";
-        ctx.fillText("動態注意力權重", 48, 48);
+        ctx.font = "14px Noto Sans TC, Noto Sans KR, sans-serif";
+        ctx.fillText(hero.title, 48, 48);
         for (let i = 0; i < n; i++) {
           ctx.fillStyle = "#d4a35c";
           ctx.fillText(tokens[i], 48, oy + i * cell + 42);

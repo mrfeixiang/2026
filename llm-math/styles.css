@@ -10,9 +10,14 @@
   --danger: #e07a5f;
   --glow: rgba(94, 196, 160, 0.22);
   --radius: 18px;
-  --font-serif: "Noto Serif TC", "Songti TC", serif;
-  --font-sans: "Noto Sans TC", "PingFang TC", sans-serif;
+  --font-serif: "Noto Serif KR", "Noto Serif TC", "Songti TC", serif;
+  --font-sans: "Noto Sans KR", "Noto Sans TC", "PingFang TC", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html[lang="en"] {
+  --font-serif: "Noto Serif KR", "Noto Serif TC", Georgia, serif;
+  --font-sans: "Noto Sans KR", "Noto Sans TC", "Segoe UI", sans-serif;
 }
 
 *,
@@ -109,6 +114,47 @@ body {
   backdrop-filter: blur(14px);
   background: rgba(7, 20, 15, 0.72);
   border-bottom: 1px solid var(--line);
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(7, 20, 15, 0.55);
+}
+
+.lang-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.4rem 0.65rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.lang-btn + .lang-btn {
+  border-left: 1px solid var(--line);
+}
+
+.lang-btn:hover {
+  color: var(--text);
+}
+
+.lang-btn.active {
+  background: rgba(94, 196, 160, 0.2);
+  color: var(--accent);
 }
 
 .brand-mark {
@@ -630,6 +676,11 @@ h2 {
 
   .menu-toggle {
     display: inline-flex;
+  }
+
+  .lang-btn {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.72rem;
   }
 
   .stats {

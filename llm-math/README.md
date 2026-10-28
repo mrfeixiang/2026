@@ -1,19 +1,20 @@
-# 大模型數學工坊
+# LLM Math Studio / 大模型數學工坊 / LLM 수학 스튜디오
 
-互動式學習站：以線性代數、微積分與概率統計理解 BERT、GPT、Stable Diffusion 與 DeepSeek。
+Interactive learning site for the math behind BERT, GPT, Stable Diffusion, and DeepSeek.
 
-## 本地預覽
+**Default UI languages:** English and Korean (auto-detected). Traditional Chinese is also available via the EN / 한국어 / 中文 switcher.
+
+## Local preview
 
 ```bash
-# 在倉庫根目錄
 python3 -m http.server 8080
-# 打開 http://localhost:8080/llm-math/
+# open http://localhost:8080/llm-math/
 ```
 
-## 內容結構
+## Structure
 
-- **目錄**：第 1–8 章（概覽 → 基礎數學 → 模型中的數學 → DeepSeek）
-- **互動實驗**：向量內積、矩陣變換、注意力、梯度下降、溫度採樣、擴散加噪
-- **模型視角**：四大模型的數學對照卡
+- **Contents:** Chapters 1–8 (overview → foundations → model math → DeepSeek)
+- **Labs:** Dot product, matrix maps, attention, gradient descent, temperature sampling, diffusion noise
+- **Models:** Side-by-side math cards for four architectures
 
-講師介紹來源於課程大綱作者江南燕；本站為互動學習原型，非原書全文。
+Instructor bio follows the course author 江南燕; this site is an interactive prototype, not the full book text.

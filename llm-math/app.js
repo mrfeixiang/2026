@@ -1,6 +1,7 @@
 (function () {
-  const data = window.LLM_MATH;
+  const i18n = window.LLM_MATH_I18N;
   const labs = window.LLM_MATH_LABS;
+
   const views = {
     home: document.getElementById("view-home"),
     about: document.getElementById("view-about"),
@@ -10,32 +11,88 @@
     models: document.getElementById("view-models")
   };
 
-  const flatSections = [];
-  data.chapters.forEach((ch) => {
-    ch.sections.forEach((sec) => {
-      flatSections.push({ chapter: ch, section: sec });
-    });
-  });
-
   let currentFlatIndex = 0;
   let activeLab = "attention";
+  let currentView = "home";
 
-  const labDefs = [
-    { id: "overview", name: "數學匯流" },
-    { id: "vectors", name: "向量內積" },
-    { id: "matrix", name: "矩陣變換" },
-    { id: "attention", name: "注意力" },
-    { id: "gradient", name: "梯度下降" },
-    { id: "probability", name: "溫度採樣" },
-    { id: "diffusion", name: "擴散加噪" }
-  ];
+  function content() {
+    return i18n.getContent();
+  }
+
+  function ui() {
+    return i18n.getUi();
+  }
+
+  function flatSections() {
+    const sections = [];
+    content().chapters.forEach((ch) => {
+      ch.sections.forEach((sec) => {
+        sections.push({ chapter: ch, section: sec });
+      });
+    });
+    return sections;
+  }
+
+  function labDefs() {
+    const tabs = ui().labTabs;
+    return [
+      { id: "overview", name: tabs.overview },
+      { id: "vectors", name: tabs.vectors },
+      { id: "matrix", name: tabs.matrix },
+      { id: "attention", name: tabs.attention },
+      { id: "gradient", name: tabs.gradient },
+      { id: "probability", name: tabs.probability },
+      { id: "diffusion", name: tabs.diffusion }
+    ];
+  }
+
+  function applyStaticUi() {
+    const t = ui();
+    document.documentElement.lang = t.htmlLang;
+    document.title = t.title;
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute("content", t.description);
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (t[key] != null) el.textContent = t[key];
+    });
+
+    document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-html");
+      if (t[key] != null) el.innerHTML = t[key];
+    });
+
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (t[key] != null) el.setAttribute("placeholder", t[key]);
+    });
+
+    document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-aria");
+      if (t[key] != null) el.setAttribute("aria-label", t[key]);
+    });
+
+    // Author bio from content pack
+    const author = content().author;
+    const aboutName = document.getElementById("aboutName");
+    const aboutBio = document.getElementById("aboutBio");
+    if (aboutName) aboutName.textContent = author.name;
+    if (aboutBio) aboutBio.textContent = author.bio;
+
+    document.querySelectorAll(".lang-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.lang === i18n.getLang());
+      btn.setAttribute("aria-pressed", btn.dataset.lang === i18n.getLang() ? "true" : "false");
+    });
+  }
 
   function showView(name) {
+    currentView = name;
     Object.entries(views).forEach(([key, el]) => {
       if (!el) return;
       el.classList.toggle("hidden", key !== name);
     });
-    document.querySelectorAll(".top-nav button").forEach((btn) => {
+    document.querySelectorAll(".top-nav [data-nav]").forEach((btn) => {
       const nav = btn.dataset.nav;
       btn.classList.toggle("active", nav === name || (name === "chapter" && nav === "toc"));
     });
@@ -80,16 +137,17 @@
 
   function renderToc(query = "") {
     const grid = document.getElementById("tocGrid");
+    const t = ui();
     const q = query.trim().toLowerCase();
     grid.innerHTML = "";
-    data.chapters.forEach((ch) => {
+    content().chapters.forEach((ch) => {
       const hay = `${ch.title} ${ch.blurb} ${ch.sections.map((s) => s.title).join(" ")}`.toLowerCase();
       if (q && !hay.includes(q)) return;
       const card = document.createElement("button");
       card.type = "button";
       card.className = "toc-card";
       card.innerHTML = `
-        <div class="num">第 ${ch.num} 章</div>
+        <div class="num">${i18n.format(t.tocChapter, { num: ch.num })}</div>
         <h3>${ch.title}</h3>
         <p>${ch.blurb}</p>
         <div class="secs">${ch.sections
@@ -100,32 +158,36 @@
       grid.appendChild(card);
     });
     if (!grid.children.length) {
-      grid.innerHTML = `<p class="note">沒有符合「${query}」的章節。</p>`;
+      grid.innerHTML = `<p class="note">${i18n.format(t.tocEmpty, { query })}</p>`;
     }
   }
 
   function openChapterSection(chapterId, sectionId) {
-    const idx = flatSections.findIndex(
+    const list = flatSections();
+    const idx = list.findIndex(
       (item) => item.chapter.id === chapterId && item.section.id === sectionId
     );
     currentFlatIndex = idx < 0 ? 0 : idx;
     renderChapter();
     showView("chapter");
-    const item = flatSections[currentFlatIndex];
+    const item = list[currentFlatIndex];
     setHash(`#chapter/${item.chapter.id}/${item.section.id}`);
   }
 
   function openChapterByFlat(index) {
-    currentFlatIndex = Math.max(0, Math.min(flatSections.length - 1, index));
+    const list = flatSections();
+    currentFlatIndex = Math.max(0, Math.min(list.length - 1, index));
     renderChapter();
     showView("chapter");
-    const item = flatSections[currentFlatIndex];
+    const item = list[currentFlatIndex];
     setHash(`#chapter/${item.chapter.id}/${item.section.id}`);
   }
 
   function renderChapter() {
-    const item = flatSections[currentFlatIndex];
+    const list = flatSections();
+    const item = list[currentFlatIndex];
     const { chapter, section } = item;
+    const t = ui();
     const article = document.getElementById("chapterArticle");
     const blocks = section.blocks
       .map((b) => `<div class="block"><h4>${b.h}</h4><p>${b.p}</p></div>`)
@@ -147,11 +209,11 @@
     }
 
     const labCta = section.lab
-      ? `<div class="inline-lab-cta"><button type="button" class="btn primary" data-open-lab="${section.lab}">打開對應互動實驗 →</button></div>`
+      ? `<div class="inline-lab-cta"><button type="button" class="btn primary" data-open-lab="${section.lab}">${t.openLab}</button></div>`
       : "";
 
     article.innerHTML = `
-      <p class="chapter-kicker">第 ${chapter.num} 章 · ${section.id}</p>
+      <p class="chapter-kicker">${i18n.format(t.chapterKicker, { num: chapter.num, id: section.id })}</p>
       <h2>${chapter.title}</h2>
       <h3 class="section-title">${section.title}</h3>
       ${blocks}
@@ -164,14 +226,14 @@
     });
 
     document.getElementById("prevChapter").disabled = currentFlatIndex === 0;
-    document.getElementById("nextChapter").disabled = currentFlatIndex === flatSections.length - 1;
+    document.getElementById("nextChapter").disabled = currentFlatIndex === list.length - 1;
   }
 
   function renderLabs(labId) {
     activeLab = labId;
     const tabs = document.getElementById("labTabs");
     tabs.innerHTML = "";
-    labDefs.forEach((lab) => {
+    labDefs().forEach((lab) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = lab.name;
@@ -187,8 +249,9 @@
 
   function renderModels() {
     const grid = document.getElementById("modelGrid");
+    const t = ui();
     grid.innerHTML = "";
-    data.models.forEach((m) => {
+    content().models.forEach((m) => {
       const card = document.createElement("article");
       card.className = "model-card";
       card.innerHTML = `
@@ -196,10 +259,20 @@
         <h3>${m.name}</h3>
         <p class="math">${m.math}</p>
         <ul>${m.points.map((p) => `<li>${p}</li>`).join("")}</ul>
-        <button type="button" class="btn ghost" data-lab="${m.lab}">相關實驗</button>`;
+        <button type="button" class="btn ghost" data-lab="${m.lab}">${t.relatedLab}</button>`;
       card.querySelector("button").addEventListener("click", () => navigate("labs", { lab: m.lab }));
       grid.appendChild(card);
     });
+  }
+
+  function refreshActiveView() {
+    applyStaticUi();
+    if (currentView === "toc") renderToc(document.getElementById("tocSearch")?.value || "");
+    else if (currentView === "chapter") renderChapter();
+    else if (currentView === "labs") renderLabs(activeLab);
+    else if (currentView === "models") renderModels();
+    else if (currentView === "about") showView("about");
+    else showView("home");
   }
 
   function applyHash() {
@@ -215,7 +288,7 @@
       return;
     }
     if (parts[0] === "chapter" && parts[1]) {
-      const ch = data.chapters.find((c) => c.id === parts[1]);
+      const ch = content().chapters.find((c) => c.id === parts[1]);
       const secId = parts[2] || ch?.sections[0]?.id;
       if (ch && secId) openChapterSection(ch.id, secId);
       else showView("home");
@@ -229,7 +302,10 @@
   }
 
   document.querySelectorAll("[data-nav]").forEach((el) => {
-    el.addEventListener("click", () => navigate(el.getAttribute("data-nav")));
+    el.addEventListener("click", (e) => {
+      if (el.tagName === "A") e.preventDefault();
+      navigate(el.getAttribute("data-nav"));
+    });
   });
 
   document.getElementById("menuToggle")?.addEventListener("click", () => {
@@ -247,10 +323,26 @@
     openChapterByFlat(currentFlatIndex + 1);
   });
 
+  document.querySelectorAll(".lang-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      i18n.setLang(btn.dataset.lang);
+      refreshActiveView();
+    });
+  });
+
+  window.addEventListener("llm-math:lang", () => {
+    // already handled via refreshActiveView from click; keep for external callers
+  });
+
   const heroCanvas = document.getElementById("heroCanvas");
   if (heroCanvas) labs.startHero(heroCanvas);
 
   window.addEventListener("hashchange", applyHash);
+  applyStaticUi();
   applyHash();
-  renderToc();
+  if (currentView === "home") {
+    // toc pre-render not required
+  } else if (currentView === "toc") {
+    renderToc();
+  }
 })();
