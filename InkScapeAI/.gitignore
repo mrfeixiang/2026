@@ -1,0 +1,21 @@
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+backend/.env
+backend/outputs/*.png
+backend/outputs/
+
+# macOS / Xcode
+.DS_Store
+ios/**/xcuserdata/
+ios/**/*.xcodeproj/project.xcworkspace/xcuserdata/
+ios/**/DerivedData/
+*.xcuserstate
+
+# Fonts / models are user-provided
+Assets/Fonts/*.ttf
+Assets/Fonts/*.otf
+Assets/Fonts/*.ttc
+Models/*.safetensors
+Models/*.ckpt
