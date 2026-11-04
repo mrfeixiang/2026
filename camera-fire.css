@@ -305,6 +305,141 @@ html, body {
   background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
 }
 
+/* ---------- Rhythm mode extras ---------- */
+.track-select {
+  background: #0e140e;
+  color: var(--ink);
+  border: 1px solid #2a352a;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 2px 6px;
+  max-width: 220px;
+}
+
+.rhythm-panel {
+  max-width: 480px;
+}
+
+.track-picks {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.track-pick {
+  flex: 1 1 160px;
+  background: #0a160a;
+  color: var(--ink);
+  border: 1px solid var(--ink-dim);
+  border-radius: 4px;
+  font-family: inherit;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.track-pick .pick-title {
+  display: block;
+  color: var(--accent);
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.track-pick .pick-sub {
+  display: block;
+  color: var(--ink-dim);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.track-pick:hover,
+.track-pick.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(255, 230, 107, 0.25);
+  background: #122012;
+}
+
+.beat-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border: 2px solid rgba(255, 230, 107, 0.35);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.beat-ring.pulse {
+  animation: beat-pulse 0.28s ease-out;
+}
+
+@keyframes beat-pulse {
+  0%   { opacity: 0.9; transform: scale(0.55); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+
+.judge {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  transform: translateX(-50%);
+  font-size: 42px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(255, 230, 107, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.08s;
+}
+
+.judge.show { opacity: 1; }
+.judge.perfect { color: #ffe66b; }
+.judge.good { color: #9cffb1; }
+.judge.miss { color: var(--hot); }
+
+.combo-banner {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  font-size: 22px;
+  color: var(--accent);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.inline-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.inline-link:hover { text-decoration: underline; }
+
+#replayBtn {
+  margin-top: 14px;
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  font-family: inherit;
+  font-size: 20px;
+  letter-spacing: 2px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#replayBtn:hover {
+  background: var(--accent);
+  color: #000;
+}
+
 @media (max-width: 720px) {
   .crt { padding: 8px; }
   .crt-frame { padding: 8px; height: 100%; }
@@ -312,4 +447,6 @@ html, body {
   .controls input[type="range"] { width: 80px; }
   .controls .hint { display: none; }
   .panel h1 { font-size: 26px; }
+  .track-select { max-width: 140px; font-size: 13px; }
+  .judge { font-size: 28px; top: 14%; }
 }

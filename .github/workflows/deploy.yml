@@ -1,5 +1,7 @@
 name: Deploy to GitHub Pages
 
+# Only deploy from main. PR runs cannot target the github-pages environment
+# (environment protection rules reject refs/pull/*/merge).
 on:
   push:
     branches: [ main ]
